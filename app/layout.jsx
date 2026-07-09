@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Zen_Dots } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
@@ -18,6 +18,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const zenDots = Zen_Dots({
+  variable: "--font-zen-dots",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
 export const metadata = {
   title: "StreamSite - Premium Streaming Experiences",
   description: "A premium streaming and accommodation booking platform.",
@@ -27,13 +34,11 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable}  ${zenDots.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

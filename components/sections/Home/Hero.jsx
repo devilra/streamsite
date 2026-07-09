@@ -160,7 +160,7 @@ export default function Hero() {
             },
             opacity: { duration: 0.8 },
           }}
-          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          className="absolute inset-0  bg-cover bg-position-[center_top] md:bg-center lg:bg-center"
           style={{ backgroundImage: `url('${getBgImage()}')` }}
         />
 
@@ -171,6 +171,9 @@ export default function Hero() {
         {mounted && theme === "light" && (
           <div className="absolute inset-0 z-10 bg-white/20 backdrop-blur-[1px] pointer-events-none transition-colors duration-500" />
         )}
+
+        {/* 2b. Bottom Fade — blends the image seamlessly into the page's bg-slate-950 so the image's bottom edge never shows */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 sm:h-80 z-10 bg-linear-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none" />
       </div>
 
       {/* 3. The Responsive Floating Navbar */}
@@ -183,15 +186,20 @@ export default function Hero() {
           {/* Left Side: Headline and Taglines */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Location indicator */}
-            <motion.div
+            <motion.a
+              href="https://maps.app.goo.gl/MqbDGVVXiAwGeiBe8"
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-lime-400/30 bg-lime-400/10 text-lime-400 text-xs font-bold mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(163,230,53,0.15)]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-lime-400/30 bg-lime-400/10 text-lime-400 text-xs font-bold mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(163,230,53,0.15)] hover:bg-lime-400/20 hover:border-lime-400 transition-all duration-300 cursor-pointer"
             >
               <MapPin className="w-3.5 h-3.5" />
-              <span>12th Bend, Yelagiri Hills</span>
-            </motion.div>
+              <span>Stream Side, Yelagiri Hills</span>
+            </motion.a>
 
             {/* Typography Title */}
             <motion.div
@@ -200,25 +208,15 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mb-8"
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
+              <h1 className="text-[39px] sm:text-6xl md:text-6xl font-display  tracking-tight leading-[1.05] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
                 Your Adventure.
               </h1>
               {/* Lime cursive subheader replica with text shadow, gradient & typewriter */}
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif italic text-transparent bg-clip-text bg-linear-to-r from-lime-400 to-emerald-300 mt-2 font-extrabold drop-shadow-[0_2px_12px_rgba(163,230,53,0.45)] min-h-[80px]">
+              <h2 className="text-3xl font-display sm:text-6xl md:text-5xl text-transparent bg-clip-text bg-linear-to-r from-lime-400 to-emerald-300 mt-2 font-extrabold drop-shadow-[0_2px_12px_rgba(163,230,53,0.45)] min-h-[80px]">
                 {currentText}
                 <span className="ml-1 inline-block w-1.5 h-8 sm:h-10 bg-lime-400 animate-pulse align-middle" />
               </h2>
             </motion.div>
-
-            {/* Subtitle Tagline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-lg sm:text-xl text-slate-200 font-medium tracking-wide mb-2"
-            >
-              Camp. Explore. Stargaze. Repeat.
-            </motion.p>
           </div>
 
           {/* Right Side: Glassmorphic Widgets Grid */}
@@ -383,14 +381,10 @@ export default function Hero() {
               })}
             </div>
           </div>
-
-          <div className="text-[10px] text-slate-500 font-medium tracking-wide">
-            We'll personalize your experience based on your interest.
-          </div>
         </div>
 
         {/* Mouse Wheel Scroll Down indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-60">
+        {/* <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-60">
           <div className="w-5 h-8 rounded-full border-2 border-slate-400 flex justify-center p-1">
             <motion.div
               animate={{ y: [0, 8, 0] }}
@@ -402,7 +396,7 @@ export default function Hero() {
               className="w-1.5 h-1.5 rounded-full bg-slate-400"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* 5. Right Border Column: Vertical Activity Labels (Contained within Grid Space to Prevent Overlapping) */}
         <div className="hidden lg:flex absolute right-4 md:right-3 top-[50%] -translate-y-1/2 z-30 flex-col items-center">
