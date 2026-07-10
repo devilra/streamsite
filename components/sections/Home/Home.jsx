@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import UpcomingEvents from "./UpcomingEvents";
 import CommunityClubs from "./CommunityClubs";
 import AmenitiesStreamSide from "./AmenitiesStreamSide";
+import LovedByExplorers from "./Lovedbyexplorers";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <UpcomingEvents />
       <CommunityClubs />
       <AmenitiesStreamSide />
+      <LovedByExplorers />
     </div>
   );
 };

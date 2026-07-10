@@ -177,7 +177,6 @@ export default function Hero() {
       </div>
 
       {/* 3. The Responsive Floating Navbar */}
-      <Navbar />
 
       {/* 4. Dashboard Core Layout */}
       <div className="relative z-20 max-w-7xl mx-auto  px-4 md:px-8 flex flex-col justify-between pt-28 pb-3 md:pb-6 lg:pb-10">
@@ -226,41 +225,63 @@ export default function Hero() {
               and structure stays identical across devices. */}
           <div className="w-full max-w-87.5 md:max-w-137.5  lg:max-w-none lg:mx-0 lg:col-span-4 lg:col-start-8 flex flex-col gap-1 lg:gap-4">
             {/* Widget 1: Weather Stargazing Info */}
+            {/* Combined Weather + Moon Widget */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="flex items-center justify-between p-4 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
+              className="rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden"
             >
-              <div className="flex items-center gap-2 lg:gap-3">
-                <div className="p-2 lg:p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
-                  <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
+              {/* Weather */}
+              <div className="flex items-center justify-between px-4 lg:px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
+                    <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
+                  </div>
+
+                  <div>
+                    <div className="text-lg lg:text-2xl font-bold text-white">
+                      21°C
+                    </div>
+
+                    <div className="text-xs text-slate-400">Clear Sky</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-base lg:text-xl font-bold tracking-tight text-white">
-                    21°C
-                  </div>
-                  <div className="text-[10px] lg:text-xs text-slate-400">
-                    Clear Sky
-                  </div>
+
+                <div className="bg-lime-400/10 text-lime-400 text-[10px] lg:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full whitespace-nowrap">
+                  Great Stargazing
                 </div>
               </div>
-              <div className="text-left lg:text-right">
-                <div className="text-[8px] lg:text-[10px] font-bold tracking-wider text-lime-400 uppercase bg-lime-400/10 px-1.5 py-0.5 lg:px-2 lg:py-0.5 rounded-md whitespace-nowrap">
-                  Great Stargazing
+
+              {/* Separator */}
+              <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+
+              {/* Moon Phase */}
+              <div className="flex items-center gap-4 px-4 lg:px-5 py-4">
+                <div className="relative w-11 h-11 lg:w-12 lg:h-12 rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0 flex items-center justify-center">
+                  <div className="absolute w-8 h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
+                </div>
+
+                <div>
+                  <p className="text-xs text-slate-400 font-medium">
+                    Moon Phase
+                  </p>
+
+                  <h4 className="text-base lg:text-xl font-bold text-white">
+                    Waning Gibbous
+                  </h4>
                 </div>
               </div>
             </motion.div>
 
             {/* Widget 2: Moon Phase details */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.6 }}
               className="flex items-center gap-2 lg:gap-4 p-4.5 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
             >
               <div className="relative w-9 h-9 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0">
-                {/* Visual custom Moon crescent rendering */}
                 <div className="absolute w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
               </div>
               <div>
@@ -271,7 +292,7 @@ export default function Hero() {
                   Waning Gibbous
                 </div>
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Widget 3: Planets Tonight Visible (Infinite Marquee) */}
             <motion.div
@@ -405,9 +426,9 @@ export default function Hero() {
         </div> */}
 
         {/* 5. Right Border Column: Vertical Activity Labels (Contained within Grid Space to Prevent Overlapping) */}
-        <div className="absolute right-0 md:right-3 top-[55%] md:top-[50%] lg:top-[54%]  -translate-y-1/2 z-30 flex-col items-center">
+        {/* <div className="absolute right-0 md:right-3 top-[55%] md:top-[50%] lg:top-[54%]  -translate-y-1/2 z-30 flex-col items-center">
           <div className="relative">
-            {/* Fixed height container that overflows */}
+          
             <div className="flex flex-col items-center justify-start gap-2 md:gap-5  pl-4 py-4 max-h-90 md:max-h-114 overflow-y-auto no-scrollbar w-20">
               {verticalActivities.map((act, idx) => {
                 const Icon = act.icon;
@@ -431,18 +452,12 @@ export default function Hero() {
               })}
             </div>
 
-            {/* Fading bottom overlay to indicate scroll availability */}
+         
             <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-slate-950 to-transparent pointer-events-none z-10" />
 
-            {/* Animated Scroll Down Arrow indicator
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-lime-400 animate-bounce flex flex-col items-center z-20">
-              <span className="text-[8px] text-slate-500 uppercase tracking-widest leading-none scale-75 mb-0.5 font-bold">
-                More
-              </span>
-              <ChevronDown className="w-3.5 h-3.5 stroke-[2.5]" />
-            </div> */}
+           
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
