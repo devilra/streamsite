@@ -109,7 +109,7 @@ export default function UpcomingEvents() {
   }, []);
 
   return (
-    <section className="bg-slate-950 text-white py-5  px-4 md:px-8">
+    <section className="bg-slate-950 text-white  px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
         {/* Header Row */}
         <div className="flex items-center justify-between">

@@ -117,9 +117,9 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 px-4 md:px-8 max-w-7xl mx-auto">
+    <header className="fixed top-4 left-0 right-0 z-50 px-2 md:px-8 max-w-7xl mx-auto">
       {/* Navbar Container */}
-      <nav className="relative flex items-center justify-between px-4 py-2.5 rounded-2xl border border-white/10 dark:border-white/10 light:border-black/5 bg-black/40 dark:bg-black/40 light:bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300">
+      <nav className="relative flex items-center justify-between px-4 py-4 md:py-4.5 lg:py-2.5  rounded-2xl border border-white/10 dark:border-white/10 light:border-black/5 bg-black/40 dark:bg-black/40 light:bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group select-none">
           {/* Custom Mountain SVG Logo */}
@@ -372,7 +372,7 @@ export default function Navbar() {
             className="p-2.5 rounded-full border border-white/10 dark:border-white/10 light:border-black/10 text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-600 light:hover:text-black bg-white/5 dark:bg-white/5 light:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-black/10 transition-all"
             aria-label="User Account"
           >
-            <User className="w-4 h-4" />
+            <User className="w-6 md:w-4 md:h-4 lg:w-4 lg:h-4 h-6" />
           </Link>
 
           {/* Premium Book Now Button */}
@@ -381,7 +381,7 @@ export default function Navbar() {
             className="relative hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-black bg-lime-400 hover:bg-lime-300 transition-all duration-300 shadow-[0_0_20px_rgba(163,230,53,0.3)] hover:shadow-[0_0_25px_rgba(163,230,53,0.55)] active:scale-95 group/btn overflow-hidden"
           >
             <span className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
-            <Calendar className="w-4 h-4 stroke-[2.5]" />
+            <Calendar className="w-6 md:w-4 md:h-4 lg:w-4 lg:h-4 h-6 stroke-[2.5]" />
             <span>Book Now</span>
           </Link>
 
@@ -391,7 +391,7 @@ export default function Navbar() {
             className="xl:hidden p-2.5 rounded-full border border-white/10 text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 transition-all"
             aria-label="Open Mobile Menu"
           >
-            <Menu className="w-4 h-4" />
+            <Menu className="w-6 md:w-4 md:h-4 lg:w-4 lg:h-4 h-6" />
           </button>
         </div>
       </nav>

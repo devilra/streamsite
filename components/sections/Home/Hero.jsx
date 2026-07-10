@@ -143,7 +143,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-slate-950 font-sans text-white select-none">
+    <div className="relative w-full  overflow-x-hidden overflow-y-hidden bg-slate-950 font-sans text-white select-none">
       {/* 1. Ken Burns Animated Background Image */}
       <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
         <motion.div
@@ -180,9 +180,9 @@ export default function Hero() {
       <Navbar />
 
       {/* 4. Dashboard Core Layout */}
-      <div className="relative z-20 max-w-7xl mx-auto min-h-screen px-4 md:px-8 flex flex-col justify-between pt-28 pb-6">
+      <div className="relative z-20 max-w-7xl mx-auto  px-4 md:px-8 flex flex-col justify-between pt-28 pb-3 md:pb-6 lg:pb-10">
         {/* Main Content & Side Cards Wrapper */}
-        <div className="grid lg:grid-cols-12 gap-8 items-center my-auto">
+        <div className="grid lg:grid-cols-12  items-center ">
           {/* Left Side: Headline and Taglines */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Location indicator */}
@@ -206,7 +206,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="mb-8"
+              className=""
             >
               <h1 className="text-[39px] sm:text-6xl md:text-6xl font-display  tracking-tight leading-[1.05] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
                 Your Adventure.
@@ -220,27 +220,33 @@ export default function Hero() {
           </div>
 
           {/* Right Side: Glassmorphic Widgets Grid */}
-          <div className="lg:col-span-4 lg:col-start-8 flex flex-col gap-4">
+          {/* Stacked one-by-one column on ALL screen sizes (mobile, tablet, desktop) — same
+              arrangement as desktop: Weather, then Moon Phase, then Tonight Visible.
+              Sizing scales down on smaller screens so it fits nicely, but the layout order
+              and structure stays identical across devices. */}
+          <div className="w-full max-w-87.5 md:max-w-137.5  lg:max-w-none lg:mx-0 lg:col-span-4 lg:col-start-8 flex flex-col gap-1 lg:gap-4">
             {/* Widget 1: Weather Stargazing Info */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
+              className="flex items-center justify-between p-4 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400">
-                  <CloudMoon className="w-6 h-6" />
+              <div className="flex items-center gap-2 lg:gap-3">
+                <div className="p-2 lg:p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
+                  <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
                 </div>
                 <div>
-                  <div className="text-xl font-bold tracking-tight text-white">
+                  <div className="text-base lg:text-xl font-bold tracking-tight text-white">
                     21°C
                   </div>
-                  <div className="text-xs text-slate-400">Clear Sky</div>
+                  <div className="text-[10px] lg:text-xs text-slate-400">
+                    Clear Sky
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-[10px] font-bold tracking-wider text-lime-400 uppercase bg-lime-400/10 px-2 py-0.5 rounded-md">
+              <div className="text-left lg:text-right">
+                <div className="text-[8px] lg:text-[10px] font-bold tracking-wider text-lime-400 uppercase bg-lime-400/10 px-1.5 py-0.5 lg:px-2 lg:py-0.5 rounded-md whitespace-nowrap">
                   Great Stargazing
                 </div>
               </div>
@@ -251,17 +257,17 @@ export default function Hero() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.6 }}
-              className="flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
+              className="flex items-center gap-2 lg:gap-4 p-4.5 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
             >
-              <div className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-slate-900 overflow-hidden border border-white/5">
+              <div className="relative w-9 h-9 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0">
                 {/* Visual custom Moon crescent rendering */}
-                <div className="absolute w-8 h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
+                <div className="absolute w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
               </div>
               <div>
-                <div className="text-xs text-slate-400 font-medium">
+                <div className="text-[10px] lg:text-xs text-slate-400 font-medium">
                   Moon Phase
                 </div>
-                <div className="text-sm font-bold text-white mt-0.5">
+                <div className="text-xs lg:text-sm font-bold text-white mt-0.5">
                   Waning Gibbous
                 </div>
               </div>
@@ -272,9 +278,9 @@ export default function Hero() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.7 }}
-              className="p-4 rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden w-full"
+              className="p-3 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden w-full"
             >
-              <div className="text-xs text-slate-400 font-semibold mb-3">
+              <div className="text-[10px] lg:text-xs text-slate-400 font-semibold mb-2 lg:mb-3">
                 Tonight Visible
               </div>
               <div className="relative w-full flex overflow-hidden">
@@ -286,32 +292,32 @@ export default function Hero() {
                     duration: 16,
                     repeat: Infinity,
                   }}
-                  className="flex gap-3 min-w-max pr-3"
+                  className="flex gap-2 lg:gap-3 min-w-max pr-3"
                 >
                   {[...planets, ...planets].map((planet, idx) => (
                     <div
                       key={`${planet.name}-${idx}`}
-                      className="relative flex items-center gap-3 px-3 py-2 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md w-36 select-none shrink-0"
+                      className="relative flex items-center gap-2 lg:gap-3 px-2.5 py-1.5 lg:px-3 lg:py-2 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md w-28 lg:w-36 select-none shrink-0"
                     >
                       {/* 3D Planet Sphere Visual */}
-                      <div className="relative w-8 h-8 shrink-0 flex items-center justify-center">
+                      <div className="relative w-7 h-7 lg:w-8 lg:h-8 shrink-0 flex items-center justify-center">
                         <div
                           className={cn(
-                            "w-6 h-6 rounded-full relative z-10",
+                            "w-5 h-5 lg:w-6 lg:h-6 rounded-full relative z-10",
                             planet.style,
                           )}
                         />
                         {planet.hasRings && (
-                          <div className="absolute w-10 h-1.5 border border-amber-300/40 rounded-full skew-y-12 rotate-[-20deg] z-20 top-[40%] scale-x-125 scale-y-110 pointer-events-none" />
+                          <div className="absolute w-9 lg:w-10 h-1.5 border border-amber-300/40 rounded-full skew-y-12 rotate-[-20deg] z-20 top-[40%] scale-x-125 scale-y-110 pointer-events-none" />
                         )}
                       </div>
 
                       {/* Name & Desc */}
                       <div className="flex flex-col text-left">
-                        <span className="text-[10px] font-bold text-white tracking-wide">
+                        <span className="text-[9px] lg:text-[10px] font-bold text-white tracking-wide">
                           {planet.name}
                         </span>
-                        <span className="text-[8px] text-slate-400 font-medium">
+                        <span className="text-[7px] lg:text-[8px] text-slate-400 font-medium">
                           {planet.desc}
                         </span>
                       </div>
@@ -328,7 +334,7 @@ export default function Hero() {
         </div>
 
         {/* Bottom Bar: Category selectors ("What excites you today?") */}
-        <div className="w-full flex flex-col gap-3 mt-auto">
+        <div className="w-full flex flex-col gap-3 mt-10 md:mt-11 lg:mt-3 ">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold tracking-widest text-slate-400 uppercase">
               What excites you today?
@@ -399,10 +405,10 @@ export default function Hero() {
         </div> */}
 
         {/* 5. Right Border Column: Vertical Activity Labels (Contained within Grid Space to Prevent Overlapping) */}
-        <div className="hidden lg:flex absolute right-4 md:right-3 top-[50%] -translate-y-1/2 z-30 flex-col items-center">
+        <div className="absolute right-0 md:right-3 top-[55%] md:top-[50%] lg:top-[54%]  -translate-y-1/2 z-30 flex-col items-center">
           <div className="relative">
             {/* Fixed height container that overflows */}
-            <div className="flex flex-col items-center justify-start gap-6  pl-4 py-4 max-h-114  overflow-y-auto no-scrollbar w-20">
+            <div className="flex flex-col items-center justify-start gap-2 md:gap-5  pl-4 py-4 max-h-90 md:max-h-114 overflow-y-auto no-scrollbar w-20">
               {verticalActivities.map((act, idx) => {
                 const Icon = act.icon;
                 return (
@@ -417,7 +423,7 @@ export default function Hero() {
                     <div className="p-2.5 rounded-full border border-white/5 bg-white/5 text-slate-400 group-hover:bg-lime-400 group-hover:text-black group-hover:border-lime-400 transition-all duration-300">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[9px] text-slate-400 group-hover:text-lime-400 font-bold uppercase tracking-wider scale-90 mt-1">
+                    <span className="text-[8px] md:text-[9px] text-slate-400 group-hover:text-lime-400 font-bold uppercase tracking-wider scale-90 mt-1">
                       {act.label}
                     </span>
                   </motion.div>
