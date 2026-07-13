@@ -264,7 +264,7 @@ export default function AmenitiesStreamSide() {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto flex flex-col gap-10">
+      <div className=" flex flex-col gap-10">
         {/* Header Row */}
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-lime-400/10 text-lime-400 border border-lime-400/20">
