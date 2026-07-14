@@ -159,7 +159,7 @@ function TentCard({ tent }) {
       <div
         className={cn(
           " min-h-0 transition-all duration-500  px-3.5 py-3 flex flex-col gap-2.5",
-          expanded ? "flex-1 overflow-y-auto no-scrollbar" : "overflow-hidden",
+          true ? "flex-1 overflow-y-auto no-scrollbar" : "overflow-hidden",
         )}
       >
         <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wide">
