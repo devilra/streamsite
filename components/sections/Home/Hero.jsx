@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/common/Navbar";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +29,8 @@ export default function Hero() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeInterest, setActiveInterest] = useState("Stargazer");
+  const interestsRef = useRef(null);
+  const [showLeftInterestScroll, setShowLeftInterestScroll] = useState(false);
 
   // Typewriter effect state
   const words = [
@@ -75,6 +77,19 @@ export default function Hero() {
 
     return () => clearTimeout(timer);
   }, [currentText, isDeleting, currentWordIndex]);
+
+  // Track horizontal scroll position of the interests slider so we can
+  // fade the left edge in only once the user has scrolled right.
+  useEffect(() => {
+    const el = interestsRef.current;
+    const handleScroll = () => {
+      if (el) setShowLeftInterestScroll(el.scrollLeft > 20);
+    };
+    if (el) el.addEventListener("scroll", handleScroll);
+    return () => {
+      if (el) el.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const interests = [
     { id: "Stargazer", label: "Stargazer", icon: Telescope },
@@ -179,7 +194,7 @@ export default function Hero() {
       {/* 3. The Responsive Floating Navbar */}
 
       {/* 4. Dashboard Core Layout */}
-      <div className="relative z-20 max-w-7xl mx-auto  px-4 md:px-8 flex flex-col justify-between pt-28 pb-3 md:pb-6 lg:pb-10">
+      <div className="relative z-20 max-w-7xl mx-auto  px-4 md:px-8 flex flex-col justify-between pt-28 pb-1 md:pb-6 lg:pb-10">
         {/* Main Content & Side Cards Wrapper */}
         <div className="grid lg:grid-cols-12  items-center ">
           {/* Left Side: Headline and Taglines */}
@@ -223,41 +238,33 @@ export default function Hero() {
               arrangement as desktop: Weather, then Moon Phase, then Tonight Visible.
               Sizing scales down on smaller screens so it fits nicely, but the layout order
               and structure stays identical across devices. */}
-          <div className="w-full max-w-87.5 md:max-w-137.5  lg:max-w-none lg:mx-0 lg:col-span-4 lg:col-start-8 flex flex-col gap-1 lg:gap-4">
+          <div className="w-full max-w-87.5 md:max-w-137.5  lg:max-w-none lg:mx-0 lg:col-span-4 lg:col-start-8 flex flex-col gap-1 lg:gap-1">
             {/* Widget 1: Weather Stargazing Info */}
             {/* Combined Weather + Moon Widget */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden"
+              className="rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden flex items-stretch"
             >
               {/* Weather */}
-              <div className="flex items-center justify-between px-4 lg:px-5 py-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
-                    <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
-                  </div>
-
-                  <div>
-                    <div className="text-lg lg:text-2xl font-bold text-white">
-                      21°C
-                    </div>
-
-                    <div className="text-xs text-slate-400">Clear Sky</div>
-                  </div>
+              <div className="flex-1 flex items-center gap-3 px-4 lg:px-5 py-4">
+                <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
+                  <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
                 </div>
 
-                <div className="bg-lime-400/10 text-lime-400 text-[10px] lg:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full whitespace-nowrap">
-                  Great Stargazing
+                <div>
+                  <div className="text-lg lg:text-2xl font-bold text-white">
+                    21°C
+                  </div>
                 </div>
               </div>
 
-              {/* Separator */}
-              <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+              {/* Vertical Separator — self-stretch fills the flex row's height */}
+              <div className="w-px my-3 self-stretch bg-linear-to-b from-transparent via-white/45 to-transparent shrink-0" />
 
               {/* Moon Phase */}
-              <div className="flex items-center gap-4 px-4 lg:px-5 py-4">
+              <div className="flex-1 flex items-center gap-4 px-4 lg:px-5 py-4">
                 <div className="relative w-11 h-11 lg:w-12 lg:h-12 rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0 flex items-center justify-center">
                   <div className="absolute w-8 h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
                 </div>
@@ -266,33 +273,9 @@ export default function Hero() {
                   <p className="text-xs text-slate-400 font-medium">
                     Moon Phase
                   </p>
-
-                  <h4 className="text-base lg:text-xl font-bold text-white">
-                    Waning Gibbous
-                  </h4>
                 </div>
               </div>
             </motion.div>
-
-            {/* Widget 2: Moon Phase details */}
-            {/* <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.6 }}
-              className="flex items-center gap-2 lg:gap-4 p-4.5 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg"
-            >
-              <div className="relative w-9 h-9 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0">
-                <div className="absolute w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
-              </div>
-              <div>
-                <div className="text-[10px] lg:text-xs text-slate-400 font-medium">
-                  Moon Phase
-                </div>
-                <div className="text-xs lg:text-sm font-bold text-white mt-0.5">
-                  Waning Gibbous
-                </div>
-              </div>
-            </motion.div> */}
 
             {/* Widget 3: Planets Tonight Visible (Infinite Marquee) */}
             <motion.div
@@ -362,102 +345,69 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Slider list */}
-          <div className="w-full overflow-x-auto no-scrollbar py-2">
-            <div className="flex items-start gap-4 min-w-max">
-              {interests.map((interest) => {
-                const IconComponent = interest.icon;
-                const isActive = activeInterest === interest.id;
-                return (
-                  <div
-                    key={interest.id}
-                    onClick={() => setActiveInterest(interest.id)}
-                    className="flex flex-col items-center group cursor-pointer select-none"
-                  >
-                    {/* Card Container */}
+          {/* Slider list — width is capped on larger screens so it scrolls instead of
+              stretching across the whole page; mobile keeps its natural full-width scroll.
+              Left/right fade overlays only show while there's more content to scroll to. */}
+          <div className="relative w-full lg:max-w-[560px] xl:max-w-[640px]">
+            {/* Fade Overlays */}
+            <div
+              className={cn(
+                "absolute left-0 top-0 bottom-0 w-8 bg-linear-to-r from-slate-950 to-transparent pointer-events-none z-10 transition-opacity duration-300",
+                showLeftInterestScroll ? "opacity-100" : "opacity-0",
+              )}
+            />
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-slate-950 to-transparent pointer-events-none z-10" />
+
+            <div
+              ref={interestsRef}
+              className="w-full overflow-x-auto no-scrollbar py-2"
+            >
+              <div className="flex items-start gap-4 min-w-max pr-4">
+                {interests.map((interest) => {
+                  const IconComponent = interest.icon;
+                  const isActive = activeInterest === interest.id;
+                  return (
                     <div
-                      className={cn(
-                        "w-20 h-20 rounded-2xl border flex items-center justify-center transition-all duration-300 backdrop-blur-md bg-black/35",
-                        isActive
-                          ? "border-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.3)] bg-lime-400/5"
-                          : "border-white/10 hover:border-white/30 hover:bg-white/5",
-                      )}
+                      key={interest.id}
+                      onClick={() => setActiveInterest(interest.id)}
+                      className="flex flex-col items-center group cursor-pointer select-none"
                     >
-                      <IconComponent
+                      {/* Card Container */}
+                      <div
                         className={cn(
-                          "w-7 h-7 transition-colors duration-300",
+                          "w-20 h-20 rounded-2xl border flex items-center justify-center transition-all duration-300 backdrop-blur-md bg-black/35",
                           isActive
-                            ? "text-lime-400"
+                            ? "border-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.3)] bg-lime-400/5"
+                            : "border-white/10 hover:border-white/30 hover:bg-white/5",
+                        )}
+                      >
+                        <IconComponent
+                          className={cn(
+                            "w-7 h-7 transition-colors duration-300",
+                            isActive
+                              ? "text-lime-400"
+                              : "text-slate-300 group-hover:text-white",
+                          )}
+                        />
+                      </div>
+                      {/* Label Text */}
+                      <span
+                        className={cn(
+                          "text-[10px] sm:text-[11px] font-semibold text-center mt-2.5 transition-colors duration-300 max-w-[85px] leading-tight select-none",
+                          isActive
+                            ? "text-lime-400 font-bold"
                             : "text-slate-300 group-hover:text-white",
                         )}
-                      />
+                      >
+                        {interest.label}
+                      </span>
                     </div>
-                    {/* Label Text */}
-                    <span
-                      className={cn(
-                        "text-[10px] sm:text-[11px] font-semibold text-center mt-2.5 transition-colors duration-300 max-w-[85px] leading-tight select-none",
-                        isActive
-                          ? "text-lime-400 font-bold"
-                          : "text-slate-300 group-hover:text-white",
-                      )}
-                    >
-                      {interest.label}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Mouse Wheel Scroll Down indicator */}
-        {/* <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-60">
-          <div className="w-5 h-8 rounded-full border-2 border-slate-400 flex justify-center p-1">
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-1.5 h-1.5 rounded-full bg-slate-400"
-            />
-          </div>
-        </div> */}
-
-        {/* 5. Right Border Column: Vertical Activity Labels (Contained within Grid Space to Prevent Overlapping) */}
-        {/* <div className="absolute right-0 md:right-3 top-[55%] md:top-[50%] lg:top-[54%]  -translate-y-1/2 z-30 flex-col items-center">
-          <div className="relative">
-          
-            <div className="flex flex-col items-center justify-start gap-2 md:gap-5  pl-4 py-4 max-h-90 md:max-h-114 overflow-y-auto no-scrollbar w-20">
-              {verticalActivities.map((act, idx) => {
-                const Icon = act.icon;
-                return (
-                  <motion.div
-                    key={act.label}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
-                    className="flex flex-col items-center gap-1 group cursor-pointer"
-                    title={act.label}
-                  >
-                    <div className="p-2.5 rounded-full border border-white/5 bg-white/5 text-slate-400 group-hover:bg-lime-400 group-hover:text-black group-hover:border-lime-400 transition-all duration-300">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="text-[8px] md:text-[9px] text-slate-400 group-hover:text-lime-400 font-bold uppercase tracking-wider scale-90 mt-1">
-                      {act.label}
-                    </span>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-         
-            <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-slate-950 to-transparent pointer-events-none z-10" />
-
-           
-          </div>
-        </div> */}
       </div>
     </div>
   );
