@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Tent,
   Heart,
@@ -17,6 +18,7 @@ import {
   Ruler,
   Info,
   ArrowRight,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +44,7 @@ const tents = [
     windproof: "Yes",
     material: "Polyester",
     weight: "2.6 kg",
-    easySetup: "5–10 mins",
+    easySetup: "5\u201310 mins",
     ventilation: "2 Windows",
     seasons: "3 Season",
     floorSize: "7 x 5 ft",
@@ -61,7 +63,7 @@ const tents = [
     tags: ["Spacious", "Comfortable", "Family Friendly"],
     description:
       "Spacious and comfortable for small families and groups. Extra room to relax and enjoy.",
-    capacity: "2 Persons",
+    capacity: "4 Persons",
     bestFor: [
       { icon: Users, label: "Friends" },
       { icon: Users, label: "Small Families" },
@@ -70,7 +72,7 @@ const tents = [
     windproof: "Yes",
     material: "Polyester",
     weight: "3.6 kg",
-    easySetup: "5–12 mins",
+    easySetup: "5\u201312 mins",
     ventilation: "2 Windows",
     seasons: "3 Season",
     floorSize: "8 x 6 ft",
@@ -97,17 +99,88 @@ const tents = [
     windproof: "Yes",
     material: "Polyester",
     weight: "4.8 kg",
-    easySetup: "10–15 mins",
+    easySetup: "10\u201315 mins",
     ventilation: "3 Windows",
     seasons: "3 Season",
     floorSize: "10 x 8 ft",
-    image: "/tent/6p.png",
+    image: "/tent/4p.png",
   },
 ];
 
-function TentCard({ tent }) {
+// Compact preview card — shown in the horizontal carousel.
+// Just the image + capacity + title. No scroll, no extra details.
+// Clicking it opens the full detail modal.
+function TentCard({ tent, onSelect }) {
+  return (
+    <button
+      onClick={() => onSelect(tent)}
+      className="group
+snap-start
+shrink-0
+w-80
+rounded-2xl
+overflow-hidden
+border
+border-slate-800
+bg-slate-900
+shadow-[0_8px_24px_rgba(0,0,0,0.45)]
+flex
+flex-col
+text-left
+transition-all
+duration-300
+hover:border-lime-400
+hover:bg-lime-400/5
+hover:shadow-[0_0_18px_rgba(163,230,53,0.25)]
+"
+    >
+      {/* Image */}
+      <div className="relative h-40 sm:h-44 shrink-0 overflow-hidden">
+        <img
+          src={tent.image}
+          alt={tent.title}
+          className=" w-full
+    h-full
+    object-cover
+    transition-transform
+    duration-500
+    group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+        {/* <span className="absolute bottom-2 right-2 text-[9px] font-semibold text-white/80">
+          {tent.photoCount}
+        </span> */}
+      </div>
+
+      {/* Just capacity + title */}
+      <div className="px-3.5 py-3 flex flex-col gap-1">
+        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wide">
+          <Users className="w-3 h-3 text-lime-400" />
+          {tent.capacity.toUpperCase()}
+        </div>
+        <h3 className="text-sm font-bold text-slate-50 leading-tight">
+          {tent.title}
+        </h3>
+      </div>
+    </button>
+  );
+}
+
+// Full detail modal — opens with framer-motion when a tent card is clicked.
+function TentModal({ tent, onClose }) {
+  return (
+    <AnimatePresence>
+      {tent && <TentModalContent tent={tent} onClose={onClose} />}
+    </AnimatePresence>
+  );
+}
+
+// Split into its own component so tent.* is only ever accessed once tent is
+// guaranteed non-null (AnimatePresence still gets to run the exit animation
+// on TentModalContent before it unmounts).
+function TentModalContent({ tent, onClose }) {
   const TierIcon = tent.tierIcon;
-  const [expanded, setExpanded] = useState(false);
+  const accentText = tent.accentSoft.match(/text-\S+/)?.[0];
 
   const quickSpecs = [
     { icon: Droplet, label: "Waterproof", value: tent.waterproof },
@@ -123,177 +196,189 @@ function TentCard({ tent }) {
     { icon: Ruler, label: "Floor Size", value: tent.floorSize },
   ];
 
-  const accentText = tent.accentSoft.match(/text-\S+/)?.[0];
-
   return (
-    <div className="snap-start shrink-0 w-72 sm:w-80 h-[320px] md:h-[330px] lg:h-[270px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 shadow-[0_8px_24px_rgba(0,0,0,0.45)] flex flex-col transition-colors duration-300 hover:border-slate-700">
-      {/* Image */}
-      <div className="relative h-40 sm:h-44 shrink-0 overflow-hidden">
-        <img
-          src={tent.image}
-          alt={tent.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
-        {/* 
-        <span
-          className={cn(
-            "absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wide",
-            tent.tierBadge,
-          )}
-        >
-          <TierIcon className="w-3 h-3" />
-          {tent.tier}
-        </span> */}
-
-        {/* <button className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center">
-          <Heart className="w-3 h-3 text-white" />
-        </button> */}
-
-        {/* <span className="absolute bottom-2 right-2 text-[9px] font-semibold text-white/80">
-          {tent.photoCount}
-        </span> */}
-      </div>
-
-      {/* Scrollable content — card height stays fixed, this area scrolls internally, scrollbar hidden */}
-      <div
-        className={cn(
-          " min-h-0 transition-all duration-500  px-3.5 py-3 flex flex-col gap-2.5",
-          true ? "flex-1 overflow-y-auto no-scrollbar" : "overflow-hidden",
-        )}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 24, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.96 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full sm:w-[440px] lg:w-[520px] max-h-[92vh] overflow-y-auto no-scrollbar rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl"
       >
-        <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wide">
-          <Users className="w-3 h-3 text-slate-500" />
-          {tent.capacity.toUpperCase()}
+        {/* Image */}
+        <div className="relative h-52 sm:h-60 shrink-0 overflow-hidden">
+          <img
+            src={tent.image}
+            alt={tent.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+
+          <span
+            className={cn(
+              "absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wide",
+              tent.tierBadge,
+            )}
+          >
+            <TierIcon className="w-3.5 h-3.5" />
+            {tent.tier}
+          </span>
+
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/70 transition-colors"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+
+          <span className="absolute bottom-3 right-3 text-[10px] font-semibold text-white/80">
+            {tent.photoCount}
+          </span>
         </div>
 
-        <h3 className="text-sm font-bold text-slate-50 leading-tight -mt-1">
-          {tent.title}
-        </h3>
+        {/* Content */}
+        <div className="px-5 py-4 flex flex-col gap-3">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+            <Users className="w-3.5 h-3.5 text-slate-500" />
+            {tent.capacity.toUpperCase()}
+          </div>
 
-        <div className="flex flex-wrap gap-1">
-          {tent.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-1.5 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[8px] font-semibold text-slate-300"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+          <h3 className="text-xl font-bold text-slate-50 leading-tight -mt-1">
+            {tent.title}
+          </h3>
 
-        <p className="text-[10px] text-slate-400 leading-relaxed">
-          {tent.description}
-        </p>
-
-        {/* Quick specs row */}
-        <div className="flex items-center justify-between pt-1 pb-1 border-y border-slate-800">
-          {quickSpecs.map((spec) => {
-            const SpecIcon = spec.icon;
-            return (
-              <div
-                key={spec.label}
-                className="flex flex-col items-center gap-1 py-1"
+          <div className="flex flex-wrap gap-1.5">
+            {tent.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-semibold text-slate-300"
               >
-                <SpecIcon className={cn("w-3.5 h-3.5", accentText)} />
-                <span className="text-[8px] font-bold text-slate-100 leading-none">
-                  {spec.value}
-                </span>
-                <span className="text-[7px] text-slate-500 leading-none">
-                  {spec.label}
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <p className="text-sm text-slate-400 leading-relaxed">
+            {tent.description}
+          </p>
+
+          {/* Quick specs row */}
+          <div className="flex items-center justify-between pt-2 pb-2 border-y border-slate-800">
+            {quickSpecs.map((spec) => {
+              const SpecIcon = spec.icon;
+              return (
+                <div
+                  key={spec.label}
+                  className="flex flex-col items-center gap-1 py-1"
+                >
+                  <SpecIcon className={cn("w-4 h-4", accentText)} />
+                  <span className="text-[11px] font-bold text-slate-100 leading-none">
+                    {spec.value}
+                  </span>
+                  <span className="text-[9px] text-slate-500 leading-none">
+                    {spec.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Capacity + Best For */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                Capacity
+              </span>
+              <div
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-lg",
+                  tent.accentSoft,
+                )}
+              >
+                <Users className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-xs font-bold truncate">
+                  {tent.capacity}
                 </span>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Capacity + Best For */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex flex-col gap-1">
-            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wide">
-              Capacity
-            </span>
-            <div
-              className={cn(
-                "flex items-center gap-1.5 px-2 py-1.5 rounded-lg",
-                tent.accentSoft,
-              )}
-            >
-              <Users className="w-3 h-3 shrink-0" />
-              <span className="text-[9px] font-bold truncate">
-                {tent.capacity}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                Best For
               </span>
+              <div className="flex flex-col gap-1.5">
+                {tent.bestFor.map((b) => {
+                  const BestIcon = b.icon;
+                  return (
+                    <div
+                      key={b.label}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60"
+                    >
+                      <BestIcon className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="text-[10px] font-semibold text-slate-300 truncate">
+                        {b.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wide">
-              Best For
+
+          {/* Tent highlights */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+              Tent Highlights
             </span>
-            <div className="flex flex-col gap-1">
-              {tent.bestFor.map((b) => {
-                const BestIcon = b.icon;
+            <div className="grid grid-cols-2 gap-2">
+              {highlights.map((h) => {
+                const HIcon = h.icon;
                 return (
                   <div
-                    key={b.label}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-slate-700 bg-slate-800/60"
+                    key={h.label}
+                    className="flex items-center gap-2 px-2.5 py-2 rounded-md border border-slate-700 bg-slate-800/60"
                   >
-                    <BestIcon className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span className="text-[8px] font-semibold text-slate-300 truncate">
-                      {b.label}
-                    </span>
+                    <HIcon className={cn("w-3.5 h-3.5 shrink-0", accentText)} />
+                    <div className="flex flex-col leading-none gap-0.5 min-w-0">
+                      <span className="text-[10px] font-bold text-slate-100 truncate">
+                        {h.value}
+                      </span>
+                      <span className="text-[9px] text-slate-500 truncate">
+                        {h.label}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
             </div>
           </div>
-        </div>
 
-        {/* Tent highlights */}
-        <div className="flex flex-col gap-1">
-          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wide">
-            Tent Highlights
-          </span>
-          <div className="grid grid-cols-2 gap-1.5">
-            {highlights.map((h) => {
-              const HIcon = h.icon;
-              return (
-                <div
-                  key={h.label}
-                  className="flex items-center gap-1.5 px-1.5 py-1 rounded-md border border-slate-700 bg-slate-800/60"
-                >
-                  <HIcon className={cn("w-3 h-3 shrink-0", accentText)} />
-                  <div className="flex flex-col leading-none gap-0.5 min-w-0">
-                    <span className="text-[8px] font-bold text-slate-100 truncate">
-                      {h.value}
-                    </span>
-                    <span className="text-[7px] text-slate-500 truncate">
-                      {h.label}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {/* Buttons */}
+          {/* <div className="flex gap-2 pt-1">
+            <button className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-100 text-xs font-bold hover:bg-slate-800 transition-colors duration-300">
+              <Info className="w-4 h-4" />
+              View Details
+            </button>
+            <button
+              className={cn(
+                "flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-white text-xs font-bold transition-colors duration-300",
+                tent.accentSolid,
+              )}
+            >
+              More Info
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div> */}
         </div>
-      </div>
-
-      {/* Fixed footer — always visible */}
-      {/* <div className="shrink-0 px-3.5 pb-3.5 pt-1 flex gap-2">
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-100 text-[11px] font-bold hover:bg-slate-800 transition-colors duration-300">
-          <Info className="w-3.5 h-3.5" />
-          View Details
-        </button>
-        <button
-          className={cn(
-            "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-white text-[11px] font-bold transition-colors duration-300",
-            tent.accentSolid,
-          )}
-        >
-          More Info
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div> */}
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -302,6 +387,21 @@ export default function Tents() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [selectedTent, setSelectedTent] = useState(null);
+
+  useEffect(() => {
+    if (selectedTent) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, [selectedTent]);
 
   const updateScrollButtons = useCallback(() => {
     const el = scrollRef.current;
@@ -376,14 +476,17 @@ export default function Tents() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth pb-2 -mx-4 px-4 md:mx-0 md:px-0"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth pb-2  px-4 md:mx-0 md:px-0"
           >
             {tents.map((tent) => (
-              <TentCard key={tent.id} tent={tent} />
+              <TentCard key={tent.id} tent={tent} onSelect={setSelectedTent} />
             ))}
           </div>
         </div>
       </div>
+
+      {/* Detail modal */}
+      <TentModal tent={selectedTent} onClose={() => setSelectedTent(null)} />
     </section>
   );
 }

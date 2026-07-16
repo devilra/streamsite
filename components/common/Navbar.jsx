@@ -67,38 +67,38 @@ export default function Navbar() {
         },
       ],
     },
-    {
-      name: "Stay",
-      href: "/stay",
-      hasDropdown: true,
-      dropdownItems: [
-        {
-          title: "Luxury Domes",
-          desc: "Climatic controlled glass dome stays",
-          icon: Tent,
-          href: "/stay/luxury-domes",
-        },
-        {
-          title: "Mountain Villas",
-          desc: "Spacious private infinity pool villas",
-          icon: Tent,
-          href: "/stay/mountain-villas",
-        },
-        {
-          title: "A-Frame Cabins",
-          desc: "Cozy timber chalets with sunset views",
-          icon: Tent,
-          href: "/stay/a-frame-cabins",
-        },
-        {
-          title: "Glamping Tents",
-          desc: "Close-to-nature premium camping",
-          icon: Tent,
-          href: "/stay/glamping-tents",
-        },
-      ],
-    },
-    { name: "Communities", href: "/communities", hasDropdown: false },
+    // {
+    //   name: "Stay",
+    //   href: "/stay",
+    //   hasDropdown: true,
+    //   dropdownItems: [
+    //     {
+    //       title: "Luxury Domes",
+    //       desc: "Climatic controlled glass dome stays",
+    //       icon: Tent,
+    //       href: "/stay/luxury-domes",
+    //     },
+    //     {
+    //       title: "Mountain Villas",
+    //       desc: "Spacious private infinity pool villas",
+    //       icon: Tent,
+    //       href: "/stay/mountain-villas",
+    //     },
+    //     {
+    //       title: "A-Frame Cabins",
+    //       desc: "Cozy timber chalets with sunset views",
+    //       icon: Tent,
+    //       href: "/stay/a-frame-cabins",
+    //     },
+    //     {
+    //       title: "Glamping Tents",
+    //       desc: "Close-to-nature premium camping",
+    //       icon: Tent,
+    //       href: "/stay/glamping-tents",
+    //     },
+    //   ],
+    // },
+    // { name: "Communities", href: "/communities", hasDropdown: false },
     { name: "Events", href: "/events", hasDropdown: false },
     { name: "About Us", href: "/about-us", hasDropdown: false },
   ];

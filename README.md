@@ -64,3 +64,33 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
       <ExploreMore />
     </main>
+
+
+    <main>
+
+  <StargazingHero />
+
+  <StargazingOverview />
+
+  <WhyStargazingWithUs />
+
+  <StargazingHighlights />
+
+  <StargazingLocations />
+
+  <StargazingTimeline />
+
+  <StargazingGallery />
+
+  <StargazingEssentials />
+
+  <StargazingDifficulty />
+
+  <StargazingSafety />
+
+  <StargazingExperience />
+
+  <StargazingFAQ />
+
+  <ExploreMore />
+</main>

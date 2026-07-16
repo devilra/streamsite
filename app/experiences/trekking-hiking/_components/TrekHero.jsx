@@ -126,8 +126,11 @@ const TrekHero = () => {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="font-display font-black uppercase leading-[0.95] tracking-tight text-5xl sm:text-6xl md:text-7xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
             >
-              <span className="block text-white">Trekking</span>
-              <span className="block text-lime-400">&amp; Hiking</span>
+              <span className="block uppercase text-white">TREKKING</span>
+
+              <span className="block uppercase text-transparent bg-clip-text bg-linear-to-r from-lime-400 to-emerald-300 drop-shadow-[0_2px_12px_rgba(163,230,53,0.45)]">
+                &amp; HIKING
+              </span>
             </motion.h1>
 
             {/* Description */}

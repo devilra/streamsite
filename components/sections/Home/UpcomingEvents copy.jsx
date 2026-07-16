@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function UpcomingEvents() {
@@ -17,7 +17,7 @@ export default function UpcomingEvents() {
       day: "25",
       time: "25 May, 8:00 PM Onwards",
       image:
-        "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-2",
@@ -27,7 +27,7 @@ export default function UpcomingEvents() {
       day: "01",
       time: "01 Jun, 7:00 PM Onwards",
       image:
-        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-3",
@@ -37,7 +37,7 @@ export default function UpcomingEvents() {
       day: "08",
       time: "08 Jun, 7:30 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1531415080290-bc98545ab3ef?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1531415080290-bc98545ab3ef?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-4",
@@ -47,7 +47,7 @@ export default function UpcomingEvents() {
       day: "15",
       time: "15 Jun, 7:30 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-5",
@@ -57,7 +57,7 @@ export default function UpcomingEvents() {
       day: "22",
       time: "22 Jun, 6:00 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-6",
@@ -67,7 +67,7 @@ export default function UpcomingEvents() {
       day: "22",
       time: "22 Jun, 6:00 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-7",
@@ -77,7 +77,7 @@ export default function UpcomingEvents() {
       day: "22",
       time: "22 Jun, 6:00 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "event-8",
@@ -87,7 +87,7 @@ export default function UpcomingEvents() {
       day: "22",
       time: "22 Jun, 6:00 AM Onwards",
       image:
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80",
     },
   ];
 
@@ -109,7 +109,7 @@ export default function UpcomingEvents() {
   }, []);
 
   return (
-    <section className="bg-slate-950 text-white px-4 md:px-8">
+    <section className="bg-slate-950 text-white  px-4 md:px-8">
       <div className="flex flex-col gap-6">
         {/* Header Row */}
         <div className="flex items-center justify-between">
@@ -117,14 +117,21 @@ export default function UpcomingEvents() {
             <div className="p-2 rounded-xl bg-lime-400/10 text-lime-400 border border-lime-400/20">
               <Calendar className="w-5 h-5" />
             </div>
-            <h2 className="text-xl md:text-2xl tracking-tight text-white uppercase flex items-center gap-3">
+            <h2 className="text-xl md:text-2xl  tracking-tight text-white uppercase flex items-center gap-3">
               Upcoming Events
               <span className="hidden sm:inline-block h-0.5 w-12 bg-lime-400/20 rounded-full" />
             </h2>
           </div>
+          {/* <a
+            href="#events"
+            className="text-xs font-bold text-lime-400 hover:text-white transition-colors duration-300 flex items-center gap-1 group/btn select-none"
+          >
+            View All Events
+            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+          </a> */}
         </div>
 
-        {/* Event List Carousel wrapper */}
+        {/* Event Cards Carousel wrapper */}
         <div className="relative w-full">
           {/* Fade Overlays */}
           <div
@@ -135,46 +142,49 @@ export default function UpcomingEvents() {
           />
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-slate-950 to-transparent pointer-events-none z-10" />
 
-          {/* Horizontal Scroll GRID — column-major: fills 2 rows first, then moves
-              to the next column, so you see 2 stacked cards per screen-width, and
-              scroll horizontally to reveal more (matches the reference news-grid). */}
+          {/* Horizontal Scroll list */}
           <div
             ref={eventsRef}
-            className="grid grid-flow-col grid-rows-2 auto-cols-[18rem] sm:auto-cols-[20rem] gap-3 overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-mandatory pb-2 pr-4"
+            className="flex gap-2 md:gap-2 overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-mandatory pb-2 pr-4"
           >
             {events.map((event) => (
               <div
                 key={event.id}
-                className="w-72 sm:w-80 shrink-0 snap-start rounded-xl border border-white/5 bg-slate-900/40 backdrop-blur-xs p-2.5 flex items-center gap-3 cursor-pointer group hover:bg-slate-900/70 transition-colors duration-300"
+                className="w-42.5 sm:w-50 h-57.5 sm:h-65 rounded-[12px] overflow-hidden relative flex flex-col justify-between p-4 border border-white/5 bg-slate-900/40 backdrop-blur-xs shadow-[0_8px_32px_rgba(0,0,0,0.5)] shrink-0 group cursor-pointer select-none snap-start"
               >
-                {/* Thumbnail with date badge */}
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden shrink-0">
+                {/* Event BG Image with Zoom scale */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
                   <img
                     src={event.image}
                     alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out brightness-[0.8]"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.7] group-hover:brightness-[0.8]"
                   />
-                  <span className="absolute bottom-1 left-1 bg-black/70 backdrop-blur-md border border-white/10 rounded-md px-1.5 py-0.5 flex flex-col items-center leading-none">
-                    <span className="text-[7px] text-lime-400 font-black tracking-widest uppercase">
-                      {event.month}
-                    </span>
-                    <span className="text-[10px] text-white font-black">
-                      {event.day}
-                    </span>
-                  </span>
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent" />
                 </div>
 
-                {/* Content */}
-                <div className="min-w-0 flex-1 flex flex-col gap-1">
-                  <span className="text-[9px] text-lime-400 font-bold tracking-wider uppercase">
+                {/* Top section: Date Badge */}
+                <div className="relative z-10 flex justify-start">
+                  <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-2 w-11 h-12 flex flex-col items-center justify-center">
+                    <span className="text-[8px] text-lime-400 font-black tracking-widest uppercase leading-none">
+                      {event.month}
+                    </span>
+                    <span className="text-base text-white/80 font-black leading-none mt-1">
+                      {event.day}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom section: Metadata & Title */}
+                <div className="relative z-10 flex flex-col items-start text-left">
+                  <span className="text-[9px] text-lime-400 font-bold tracking-wider uppercase mb-1">
                     {event.category}
                   </span>
-                  <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 group-hover:text-lime-400 transition-colors duration-300">
+                  <h3 className="text-sm sm:text-base  text-white font-semibold leading-tight group-hover:text-lime-400 transition-colors duration-300">
                     {event.title}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium">
-                    <Clock className="w-3 h-3 text-lime-400 shrink-0" />
-                    <span className="truncate">{event.time}</span>
+                  <div className="flex items-center gap-1.5 mt-3 text-[10px] text-slate-300 font-medium">
+                    <Clock className="w-3 h-3 text-lime-400" />
+                    <span>{event.time}</span>
                   </div>
                 </div>
               </div>

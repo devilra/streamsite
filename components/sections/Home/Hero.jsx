@@ -32,6 +32,12 @@ export default function Hero() {
   const interestsRef = useRef(null);
   const [showLeftInterestScroll, setShowLeftInterestScroll] = useState(false);
 
+  // Collapsed-by-default widget toggles — each pill is anchored to its icon
+  // on the right and expands leftward to reveal its content on click.
+  const [weatherOpen, setWeatherOpen] = useState(false);
+  const [moonOpen, setMoonOpen] = useState(false);
+  const [tonightOpen, setTonightOpen] = useState(false);
+
   // Typewriter effect state
   const words = [
     "Your Way.",
@@ -238,101 +244,141 @@ export default function Hero() {
               arrangement as desktop: Weather, then Moon Phase, then Tonight Visible.
               Sizing scales down on smaller screens so it fits nicely, but the layout order
               and structure stays identical across devices. */}
-          <div className="w-full max-w-87.5 md:max-w-137.5  lg:max-w-none lg:mx-0 lg:col-span-4 lg:col-start-8 flex flex-col gap-1 lg:gap-1">
-            {/* Widget 1: Weather Stargazing Info */}
-            {/* Combined Weather + Moon Widget */}
+          <div className="w-full max-w-87.5 md:max-w-137.5 ml-auto lg:max-w-none lg:mx-0 lg:col-span-5 lg:col-start-8 flex flex-col gap-2 lg:gap-2">
+            {/* Widgets: Weather, Moon Phase, Tonight Visible — all three
+                collapsed to icon-only pills by default, stacked vertically
+                and right-aligned. Clicking any one expands it horizontally
+                (icon stays anchored on the right, content reveals to its
+                left), fully independent of the other two. */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden flex items-stretch"
+              className="flex flex-col items-end gap-2"
             >
-              {/* Weather */}
-              <div className="flex-1 flex items-center gap-3 px-4 lg:px-5 py-4">
-                <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 shrink-0">
-                  <CloudMoon className="w-5 h-5 lg:w-6 lg:h-6" />
-                </div>
-
-                <div>
-                  <div className="text-lg lg:text-2xl font-bold text-white">
-                    21°C
-                  </div>
-                </div>
-              </div>
-
-              {/* Vertical Separator — self-stretch fills the flex row's height */}
-              <div className="w-px my-3 self-stretch bg-linear-to-b from-transparent via-white/45 to-transparent shrink-0" />
-
-              {/* Moon Phase */}
-              <div className="flex-1 flex items-center gap-4 px-4 lg:px-5 py-4">
-                <div className="relative w-11 h-11 lg:w-12 lg:h-12 rounded-xl bg-slate-900 overflow-hidden border border-white/5 shrink-0 flex items-center justify-center">
-                  <div className="absolute w-8 h-8 rounded-full bg-slate-700 shadow-[inset_1.5rem_0_0_0_oklch(0.9_0_0)]" />
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-400 font-medium">
-                    Moon Phase
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Widget 3: Planets Tonight Visible (Infinite Marquee) */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
-              className="p-3 lg:p-4 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden w-full"
-            >
-              <div className="text-[10px] lg:text-xs text-slate-400 font-semibold mb-2 lg:mb-3">
-                Tonight Visible
-              </div>
-              <div className="relative w-full flex overflow-hidden">
-                {/* Horizontal Marquee Wrapper */}
-                <motion.div
-                  animate={{ x: ["0%", "-50%"] }}
-                  transition={{
-                    ease: "linear",
-                    duration: 16,
-                    repeat: Infinity,
-                  }}
-                  className="flex gap-2 lg:gap-3 min-w-max pr-3"
-                >
-                  {[...planets, ...planets].map((planet, idx) => (
-                    <div
-                      key={`${planet.name}-${idx}`}
-                      className="relative flex items-center gap-2 lg:gap-3 px-2.5 py-1.5 lg:px-3 lg:py-2 rounded-xl border border-white/5 bg-white/5 backdrop-blur-md w-28 lg:w-36 select-none shrink-0"
+              {/* Weather pill */}
+              <motion.button
+                type="button"
+                onClick={() => setWeatherOpen((v) => !v)}
+                initial={false}
+                animate={{ width: weatherOpen ? 148 : 48 }}
+                transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                className="h-12 lg:h-13 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden flex items-center gap-2 px-2 shrink-0"
+              >
+                <AnimatePresence initial={false}>
+                  {weatherOpen && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -12 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-base lg:text-xl font-bold text-white whitespace-nowrap"
                     >
-                      {/* 3D Planet Sphere Visual */}
-                      <div className="relative w-7 h-7 lg:w-8 lg:h-8 shrink-0 flex items-center justify-center">
-                        <div
-                          className={cn(
-                            "w-5 h-5 lg:w-6 lg:h-6 rounded-full relative z-10",
-                            planet.style,
-                          )}
-                        />
-                        {planet.hasRings && (
-                          <div className="absolute w-9 lg:w-10 h-1.5 border border-amber-300/40 rounded-full skew-y-12 rotate-[-20deg] z-20 top-[40%] scale-x-125 scale-y-110 pointer-events-none" />
-                        )}
-                      </div>
+                      21°C
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <div className="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 shrink-0 ml-auto flex items-center justify-center">
+                  <CloudMoon className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
+                </div>
+              </motion.button>
 
-                      {/* Name & Desc */}
-                      <div className="flex flex-col text-left">
-                        <span className="text-[9px] lg:text-[10px] font-bold text-white tracking-wide">
-                          {planet.name}
-                        </span>
-                        <span className="text-[7px] lg:text-[8px] text-slate-400 font-medium">
-                          {planet.desc}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
+              {/* Moon Phase pill */}
+              <motion.button
+                type="button"
+                onClick={() => setMoonOpen((v) => !v)}
+                initial={false}
+                animate={{ width: moonOpen ? 172 : 48 }}
+                transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                className="h-12 lg:h-13 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden flex items-center gap-2 px-2 shrink-0"
+              >
+                <AnimatePresence initial={false}>
+                  {moonOpen && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -12 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-xs lg:text-sm text-slate-300 font-medium whitespace-nowrap"
+                    >
+                      Moon Phase
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <div className="relative w-8 h-8 rounded-lg bg-slate-900 overflow-hidden border border-white/5 shrink-0 ml-auto flex items-center justify-center">
+                  <div className="absolute w-6 h-6 rounded-full bg-slate-700 shadow-[inset_1rem_0_0_0_oklch(0.9_0_0)]" />
+                </div>
+              </motion.button>
 
-                {/* Visual fade overlays on edges */}
-                <div className="absolute left-0 top-0 bottom-0 w-6 bg-linear-to-r from-black/40 to-transparent pointer-events-none z-10" />
-                <div className="absolute right-0 top-0 bottom-0 w-6 bg-linear-to-l from-black/40 to-transparent pointer-events-none z-10" />
-              </div>
+              {/* Tonight Visible pill — expands into the infinite planet marquee */}
+              <motion.div
+                initial={false}
+                animate={{ width: tonightOpen ? 320 : 48 }}
+                transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                className="h-12 lg:h-13 rounded-xl md:rounded-2xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg overflow-hidden flex items-center justify-end shrink-0 max-w-full"
+              >
+                <AnimatePresence initial={false}>
+                  {tonightOpen && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="relative flex-1 h-full min-w-0 overflow-hidden flex items-center"
+                    >
+                      <motion.div
+                        animate={{ x: ["0%", "-50%"] }}
+                        transition={{
+                          ease: "linear",
+                          duration: 16,
+                          repeat: Infinity,
+                        }}
+                        className="flex gap-1.5 min-w-max pl-2 pr-3"
+                      >
+                        {[...planets, ...planets].map((planet, idx) => (
+                          <div
+                            key={`${planet.name}-${idx}`}
+                            className="relative flex items-center gap-1.5 px-1.5 py-1 rounded-lg border border-white/5 bg-white/5 w-[92px] select-none shrink-0"
+                          >
+                            {/* 3D Planet Sphere Visual */}
+                            <div className="relative w-5 h-5 shrink-0 flex items-center justify-center">
+                              <div
+                                className={cn(
+                                  "w-4 h-4 rounded-full relative z-10",
+                                  planet.style,
+                                )}
+                              />
+                              {planet.hasRings && (
+                                <div className="absolute w-7 h-1 border border-amber-300/40 rounded-full skew-y-12 rotate-[-20deg] z-20 top-[40%] scale-x-125 scale-y-110 pointer-events-none" />
+                              )}
+                            </div>
+
+                            {/* Name & Desc */}
+                            <div className="flex flex-col text-left min-w-0">
+                              <span className="text-[8px] font-bold text-white tracking-wide truncate">
+                                {planet.name}
+                              </span>
+                              <span className="text-[7px] text-slate-400 font-medium truncate">
+                                {planet.desc}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </motion.div>
+                      <div className="absolute left-0 top-0 bottom-0 w-4 bg-linear-to-r from-black/45 to-transparent pointer-events-none" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <button
+                  type="button"
+                  onClick={() => setTonightOpen((v) => !v)}
+                  className="h-full aspect-square flex items-center justify-center shrink-0 ml-auto px-2"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-amber-400/10 text-amber-300 shrink-0 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
+                  </div>
+                </button>
+              </motion.div>
             </motion.div>
           </div>
         </div>
