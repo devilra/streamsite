@@ -17,7 +17,7 @@ const StargazingHero = () => {
   ];
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-slate-950 font-sans text-white select-none flex items-center justify-center">
+    <section className="relative w-full  overflow-hidden bg-slate-950 font-sans text-white select-none flex items-center justify-center">
       {/* 1. Background Image Container */}
       <div className="absolute inset-0 z-0 w-full h-full">
         <div
@@ -28,11 +28,16 @@ const StargazingHero = () => {
         <div className="absolute inset-0 z-10 bg-linear-to-b from-black/50 via-transparent to-slate-950/90 pointer-events-none" />
 
         {/* Bottom Smooth Blend */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 z-10 bg-linear-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none" />
+        {/* <div className="absolute -bottom-5 left-0 right-0 h-48 z-10 bg-linear-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none" /> */}
       </div>
 
-      {/* 2. Main Center Content Container */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-24 pb-12 flex flex-col justify-center min-h-screen">
+      {/* 2. Main Center Content Container
+          NOTE: the outer <section> already centers its content with
+          `flex items-center justify-center`. This wrapper used to ALSO be
+          `min-h-screen flex flex-col justify-center`, which double-centered
+          everything and produced a huge, unpredictable gap between the
+          description and the stats on mobile. Just let it flow naturally. */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-34  pb-12">
         <div className="grid lg:grid-cols-12 gap-8 items-center w-full">
           {/* Main Copy/Stats Column - Centered properly when standalone on small layouts */}
           <div className="lg:col-span-8 flex flex-col items-start text-left max-w-2xl lg:max-w-none">
@@ -66,7 +71,7 @@ const StargazingHero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="mt-8 sm:mt-12 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-6 gap-y-5 w-full sm:w-auto"
+              className="mt-6 sm:mt-10 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-6 gap-y-5 w-full sm:w-auto"
             >
               {stats.map((stat, i) => {
                 const Icon = stat.icon;
