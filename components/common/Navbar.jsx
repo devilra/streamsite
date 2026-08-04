@@ -21,6 +21,8 @@ import {
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BiCricketBall, BiCycling } from "react-icons/bi";
+import { GiCricket, GiPhotoCamera } from "react-icons/gi";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -54,16 +56,22 @@ export default function Navbar() {
           href: "/experiences/stargazing-nights",
         },
         {
-          title: "Campfire Gatherings",
-          desc: "Stories and acoustic vibes under the stars",
-          icon: Tent,
-          href: "/experiences/campfire-gatherings",
+          title: "Running and Cycling",
+          desc: "Scenic hill routes for running and cycling adventures.",
+          icon: BiCycling,
+          href: "/experiences/running-cycling",
         },
         {
-          title: "Off-Road Safari",
-          desc: "Thrill-filled forest trail expeditions",
-          icon: Compass,
-          href: "/experiences/off-road-safari",
+          title: "Photography",
+          desc: "Capture breathtaking landscapes, wildlife and golden moments.",
+          icon: GiPhotoCamera,
+          href: "/experiences/photography",
+        },
+        {
+          title: "Cricket",
+          desc: "Enjoy exciting cricket matches with your friends in nature.",
+          icon: BiCricketBall,
+          href: "/experiences/cricket",
         },
       ],
     },
@@ -424,9 +432,9 @@ export default function Navbar() {
                     <span className="text-sm font-bold tracking-wider text-white dark:text-white light:text-black">
                       STREAM SIDE
                     </span>
-                    <span className="text-[8px] font-bold text-lime-400 tracking-wider">
+                    {/* <span className="text-[8px] font-bold text-lime-400 tracking-wider">
                       MENU
-                    </span>
+                    </span> */}
                   </div>
                   <button
                     onClick={() => setMobileMenuOpen(false)}
@@ -447,27 +455,29 @@ export default function Navbar() {
                         {item.hasDropdown ? (
                           <>
                             <button
-                              onClick={() =>
-                                setActiveDropdown(
-                                  isDropdownActive
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveDropdown((prev) =>
+                                  prev === item.name.toLowerCase()
                                     ? null
                                     : item.name.toLowerCase(),
-                                )
-                              }
+                                );
+                              }}
                               className={cn(
-                                "flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-300 dark:text-slate-300 light:text-slate-700 hover:bg-white/5 dark:hover:bg-white/5 light:hover:bg-black/5",
-                                (isDropdownActive || active) &&
-                                  "text-lime-400 bg-white/5",
+                                "flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-300",
+                                isDropdownActive
+                                  ? "bg-lime-400/10 border border-lime-400/30 text-lime-400"
+                                  : "bg-white/5 border border-white/10 text-white",
                               )}
                             >
-                              <span>{item.name}</span>
-                              <ChevronDown
-                                className={cn(
-                                  "w-4 h-4 transition-transform duration-300",
-                                  isDropdownActive &&
-                                    "rotate-180 text-lime-400",
-                                )}
-                              />
+                              <span className="font-semibold">{item.name}</span>
+
+                              <motion.div
+                                animate={{ rotate: isDropdownActive ? 180 : 0 }}
+                                transition={{ duration: 0.25 }}
+                              >
+                                <ChevronDown className="w-5 h-5" />
+                              </motion.div>
                             </button>
 
                             {/* Mobile Dropdown Sub items */}
@@ -477,28 +487,39 @@ export default function Navbar() {
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.2 }}
-                                  className="overflow-hidden bg-white/5 dark:bg-white/5 light:bg-black/5 rounded-lg mt-1 mx-2"
+                                  transition={{ duration: 0.25 }}
+                                  className="overflow-hidden"
                                 >
-                                  <div className="p-2 grid gap-1">
-                                    {item.dropdownItems.map((subItem) => (
-                                      <Link
-                                        key={subItem.title}
-                                        href={subItem.href}
-                                        onClick={() => {
-                                          setMobileMenuOpen(false);
-                                          setActiveDropdown(null);
-                                        }}
-                                        className="block p-2.5 rounded-md text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-black transition-colors"
-                                      >
-                                        <div className="font-semibold">
-                                          {subItem.title}
-                                        </div>
-                                        <div className="text-[10px] opacity-60 mt-0.5">
-                                          {subItem.desc}
-                                        </div>
-                                      </Link>
-                                    ))}
+                                  <div className="mt-2 ml-2 border-l border-lime-400/30 pl-3 space-y-2">
+                                    {item.dropdownItems.map((subItem) => {
+                                      const Icon = subItem.icon;
+
+                                      return (
+                                        <Link
+                                          key={subItem.title}
+                                          href={subItem.href}
+                                          onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setActiveDropdown(null);
+                                          }}
+                                          className="flex items-start gap-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 p-3 transition-all duration-300"
+                                        >
+                                          <div className="w-10 h-10 rounded-lg bg-lime-500/10 flex items-center justify-center shrink-0">
+                                            <Icon className="w-5 h-5 text-lime-400" />
+                                          </div>
+
+                                          <div className="flex-1">
+                                            <h4 className="text-sm font-semibold text-white">
+                                              {subItem.title}
+                                            </h4>
+
+                                            <p className="mt-1 text-xs leading-relaxed text-slate-400">
+                                              {subItem.desc}
+                                            </p>
+                                          </div>
+                                        </Link>
+                                      );
+                                    })}
                                   </div>
                                 </motion.div>
                               )}
