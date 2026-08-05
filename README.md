@@ -94,3 +94,27 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
   <ExploreMore />
 </main>
+
+CricketHero
+↓
+CricketOverview
+↓
+CricketMatches
+↓
+CricketGrounds
+↓
+CricketHighlights
+↓
+CricketGallery
+↓
+MatchSchedule
+↓
+CricketFacilities
+↓
+CricketRules
+↓
+CommunityGallery
+↓
+CricketFAQ
+↓
+ExploreMore

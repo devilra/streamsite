@@ -54,10 +54,6 @@ import {
 // A realistic mixed set of admin (Stream Side team) and approved user photos.
 // `ratio` drives the masonry card height so the grid doesn't feel uniform.
 
-// How many photos the desktop/tablet masonry grid shows before the
-// "View More" button reveals the rest inside the full-gallery modal.
-const DESKTOP_VISIBLE_COUNT = 10;
-
 const CATEGORIES = [
   { id: "all", label: "All", icon: Aperture },
   { id: "photography", label: "Photography", icon: Camera },
@@ -475,168 +471,6 @@ function StatItem({ icon: Icon, label, value, suffix = "", start }) {
 }
 
 // ---------------------------------------------------------------------------
-// MOBILE GALLERY CARD
-// ---------------------------------------------------------------------------
-// Compact tile used only on mobile (< sm), styled after the CommunityClubs
-// card: full-bleed photo, icon badge top-left, gradient overlay, meta text
-// pinned to the bottom. Sits in a plain 2-column grid (no masonry offset) so
-// rows line up and the page scrolls as one uniform list.
-
-function MobileGalleryCard({ photo, onOpen, onLike, liked }) {
-  const CategoryIcon =
-    CATEGORIES.find((c) => c.id === photo.category)?.icon || Camera;
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label={`Open photo: ${photo.caption}`}
-      onClick={() => onOpen(photo)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpen(photo);
-        }
-      }}
-      className="group relative h-56 w-full cursor-pointer select-none overflow-hidden rounded-2xl border border-white/5 bg-slate-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-    >
-      {/* Background photo */}
-      <div className="absolute inset-0 overflow-hidden">
-        <img
-          src={photo.src}
-          alt={photo.caption}
-          loading="lazy"
-          className="h-full w-full object-cover brightness-[0.7] transition-transform duration-700 ease-out group-active:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
-      </div>
-
-      {/* Foreground content */}
-      <div className="relative z-10 flex h-full flex-col justify-between p-3">
-        {/* Top row: category icon badge + featured / like */}
-        <div className="flex items-start justify-between">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/60 backdrop-blur-md">
-            <CategoryIcon className="h-4 w-4 text-[#B7FF00]" />
-          </div>
-          <div className="flex items-center gap-1.5">
-            {photo.featured && (
-              <span className="rounded-full bg-[#B7FF00] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-950">
-                Featured
-              </span>
-            )}
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                onLike(photo.id);
-              }}
-              role="button"
-              aria-label="Like photo"
-              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-black/60 backdrop-blur-md"
-            >
-              <Heart
-                className={`h-3.5 w-3.5 ${liked ? "fill-[#B7FF00] text-[#B7FF00]" : "text-white"}`}
-              />
-            </span>
-          </div>
-        </div>
-
-        {/* Bottom: location, photographer, likes/views */}
-        <div className="text-left">
-          <span className="mb-1 flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-[#B7FF00]">
-            <MapPin className="h-2.5 w-2.5" />
-            <span className="truncate">{photo.location}</span>
-          </span>
-          <h3 className="truncate text-sm font-bold leading-tight text-white">
-            {photo.photographer}
-          </h3>
-          <div className="mt-2 flex items-center gap-3 text-[10px] font-semibold text-slate-300">
-            <span className="flex items-center gap-1">
-              <Heart className="h-3 w-3 text-[#B7FF00]" />
-              {formatCount(photo.likes)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Eye className="h-3 w-3 text-[#B7FF00]" />
-              {formatCount(photo.views)}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// VIEW ALL MODAL (desktop/tablet — opened from the "View More" button)
-// ---------------------------------------------------------------------------
-// Reuses the same PhotoCard + masonry layout as the main grid, just inside a
-// scrollable fullscreen sheet, so every photo in the active filter becomes
-// reachable without permanently expanding the homepage section.
-
-function ViewAllModal({
-  open,
-  photos,
-  onClose,
-  onOpenPhoto,
-  onLike,
-  likedIds,
-}) {
-  useEffect(() => {
-    function handleKey(e) {
-      if (e.key === "Escape") onClose();
-    }
-    if (open) window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [open, onClose]);
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[75] flex flex-col bg-slate-950/98 backdrop-blur-sm"
-        >
-          <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4 sm:px-8">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-[#B7FF00]">
-                Community Gallery
-              </p>
-              <h3 className="text-lg font-semibold text-white sm:text-xl">
-                All Photos ({photos.length})
-              </h3>
-            </div>
-            <button
-              onClick={onClose}
-              aria-label="Close full gallery"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-800 text-slate-300 transition-colors hover:border-[#B7FF00] hover:text-[#B7FF00]"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-8">
-            <div className="columns-1 gap-4 sm:columns-2 lg:columns-4">
-              {photos.map((photo, i) => (
-                <PhotoCard
-                  key={photo.id}
-                  photo={photo}
-                  index={i}
-                  onOpen={onOpenPhoto}
-                  onLike={onLike}
-                  liked={likedIds.has(photo.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // UPLOAD MODAL (UI only — no submission logic beyond local simulated state)
 // ---------------------------------------------------------------------------
 
@@ -969,7 +803,6 @@ export default function CommunityGallery() {
   const [previewPhoto, setPreviewPhoto] = useState(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [statsInView, setStatsInView] = useState(false);
-  const [viewAllOpen, setViewAllOpen] = useState(false);
   const statsRef = useRef(null);
 
   // Simulate an initial fetch so the skeleton state has something to do.
@@ -1005,19 +838,6 @@ export default function CommunityGallery() {
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
       return new Date(b.date) - new Date(a.date);
     });
-  }, [activeFilter]);
-
-  // Desktop/tablet grid only ever renders the first N photos up front; the
-  // rest are reachable via "View More" → ViewAllModal.
-  const desktopVisiblePhotos = useMemo(
-    () => filteredPhotos.slice(0, DESKTOP_VISIBLE_COUNT),
-    [filteredPhotos],
-  );
-
-  // Close the full-gallery modal whenever the category changes so it never
-  // shows a stale filter's photos.
-  useEffect(() => {
-    setViewAllOpen(false);
   }, [activeFilter]);
 
   const toggleLike = useCallback((id) => {
@@ -1139,38 +959,17 @@ export default function CommunityGallery() {
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* PHOTO GRID                                                       */}
+        {/* PHOTO GRID (masonry)                                             */}
         {/* Category switching mirrors PhotographyActivities: the previous   */}
         {/* filter's grid fades out, then the newly filtered grid fades in,  */}
         {/* keyed on activeFilter so AnimatePresence treats it as a swap.    */}
-        {/*                                                                  */}
-        {/* Desktop/tablet (sm and up): unchanged masonry, capped at         */}
-        {/* DESKTOP_VISIBLE_COUNT with a "View More" button that opens the   */}
-        {/* full gallery in ViewAllModal.                                    */}
-        {/*                                                                  */}
-        {/* Mobile only (below sm): a plain 2-column grid of compact cards   */}
-        {/* styled after the CommunityClubs card, so rows line up and the    */}
-        {/* whole grid scrolls together rather than as offset masonry        */}
-        {/* columns.                                                         */}
         {/* ---------------------------------------------------------------- */}
         {isLoading ? (
-          <>
-            <div className="mt-10 hidden columns-1 gap-4 sm:block sm:columns-2 lg:columns-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <SkeletonCard key={i} ratio={[0.8, 1.2, 1, 1.35][i % 4]} />
-              ))}
-            </div>
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:hidden">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-56 animate-pulse rounded-2xl border border-slate-800 bg-slate-900"
-                >
-                  <div className="h-full w-full rounded-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800" />
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} ratio={[0.8, 1.2, 1, 1.35][i % 4]} />
+            ))}
+          </div>
         ) : (
           <AnimatePresence mode="wait">
             <motion.div
@@ -1185,48 +984,18 @@ export default function CommunityGallery() {
                   <EmptyState />
                 </div>
               ) : (
-                <>
-                  {/* Desktop / tablet masonry */}
-                  <div className="mt-10 hidden sm:block">
-                    <div className="columns-1 gap-4 sm:columns-2 lg:columns-4">
-                      {desktopVisiblePhotos.map((photo, i) => (
-                        <PhotoCard
-                          key={photo.id}
-                          photo={photo}
-                          index={i}
-                          onOpen={openPreview}
-                          onLike={toggleLike}
-                          liked={likedIds.has(photo.id)}
-                        />
-                      ))}
-                    </div>
-
-                    {filteredPhotos.length > DESKTOP_VISIBLE_COUNT && (
-                      <div className="mt-8 flex justify-center">
-                        <button
-                          onClick={() => setViewAllOpen(true)}
-                          className="group flex items-center gap-2 rounded-full border border-slate-700 px-6 py-2.5 text-sm font-medium text-slate-200 transition-all duration-300 hover:border-[#B7FF00] hover:text-[#B7FF00]"
-                        >
-                          View More
-                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Mobile-only 2-column grid */}
-                  <div className="mt-10 grid grid-cols-2 gap-3 sm:hidden">
-                    {filteredPhotos.map((photo) => (
-                      <MobileGalleryCard
-                        key={photo.id}
-                        photo={photo}
-                        onOpen={openPreview}
-                        onLike={toggleLike}
-                        liked={likedIds.has(photo.id)}
-                      />
-                    ))}
-                  </div>
-                </>
+                <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-4">
+                  {filteredPhotos.map((photo, i) => (
+                    <PhotoCard
+                      key={photo.id}
+                      photo={photo}
+                      index={i}
+                      onOpen={openPreview}
+                      onLike={toggleLike}
+                      liked={likedIds.has(photo.id)}
+                    />
+                  ))}
+                </div>
               )}
             </motion.div>
           </AnimatePresence>
@@ -1273,14 +1042,6 @@ export default function CommunityGallery() {
 
       {/* Modals */}
       <UploadModal open={uploadOpen} onClose={() => setUploadOpen(false)} />
-      <ViewAllModal
-        open={viewAllOpen}
-        photos={filteredPhotos}
-        onClose={() => setViewAllOpen(false)}
-        onOpenPhoto={openPreview}
-        onLike={toggleLike}
-        likedIds={likedIds}
-      />
       <PreviewModal
         photo={previewPhoto}
         onClose={closePreview}

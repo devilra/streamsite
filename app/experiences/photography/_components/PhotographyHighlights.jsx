@@ -513,13 +513,13 @@ export default function PhotographyHighlights() {
   const closeHighlight = () => setSelectedHighlight(null);
 
   return (
-    <section className="relative w-full bg-slate-950 text-white py-16 sm:py-20 overflow-hidden">
+    <section className="relative w-full bg-slate-950 text-white py-3 overflow-hidden">
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-lime-400/10 blur-[140px]" />
+      {/* <div className="pointer-events-none absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-lime-400/10 blur-[140px]" /> */}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative  px-4 sm:px-6 lg:px-8">
         {/* Floating capture-time card (top-right on desktop, stacked on mobile) */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: -12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -540,7 +540,7 @@ export default function PhotographyHighlights() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Section layout: left 40% / right 60% */}
         <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-start lg:pt-24">
@@ -552,14 +552,14 @@ export default function PhotographyHighlights() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2 flex flex-col"
           >
-            <div className="inline-flex items-center gap-2 w-fit rounded-full border border-lime-400/40 bg-lime-400/10 px-4 py-1.5">
+            {/* <div className="inline-flex items-center gap-2 w-fit rounded-full border border-lime-400/40 bg-lime-400/10 px-4 py-1.5">
               <Camera className="w-3.5 h-3.5 text-lime-400" />
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] text-lime-400">
                 Photography Highlights
               </span>
-            </div>
+            </div> */}
 
-            <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tight text-white">
+            <h2 className=" text-3xl sm:text-4xl lg:text-5xl  leading-[1.1] tracking-tight text-white">
               Why Every Photographer Loves{" "}
               <span className="bg-gradient-to-r from-lime-400 to-emerald-300 bg-clip-text text-transparent">
                 Stream Side
@@ -628,7 +628,7 @@ export default function PhotographyHighlights() {
         </div>
 
         {/* Bottom stats bar */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -652,7 +652,7 @@ export default function PhotographyHighlights() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
 
       <HighlightPopup highlight={selectedHighlight} onClose={closeHighlight} />

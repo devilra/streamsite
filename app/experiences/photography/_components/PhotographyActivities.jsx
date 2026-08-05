@@ -1435,7 +1435,7 @@ export default function PhotographyActivities() {
   }, [selectedActivity]);
 
   return (
-    <section className="relative w-full bg-slate-950 py-5 text-white  overflow-hidden">
+    <section className="relative w-full bg-slate-950 pt-15 md:pt-12 lg:pt-0 text-white  overflow-hidden">
       {/* ambient glow */}
       <div
         className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[140px] opacity-20"
