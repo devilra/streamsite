@@ -10,12 +10,7 @@ import {
 } from "framer-motion";
 import {
   ArrowRight,
-  Users,
   Trophy,
-  MapPin,
-  CircleDot,
-  UserRound,
-  ThumbsUp,
   PlayCircle,
   X,
   CalendarDays,
@@ -43,13 +38,65 @@ const ACCENT = "#B7FF00";
 const DEFAULT_BG =
   "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=2000&q=80";
 
-const STATS = [
-  { icon: Users, value: 24, suffix: "+", label: "Teams" },
-  { icon: CircleDot, value: 48, suffix: "+", label: "Matches" },
-  { icon: Trophy, value: 12, suffix: "+", label: "Tournaments" },
-  { icon: UserRound, value: 320, suffix: "+", label: "Players" },
-  // { icon: MapPin, value: 15, suffix: "+", label: "Grounds" },
-  { icon: ThumbsUp, value: 98, suffix: "%", label: "Positive Reviews" },
+// ---------------------------------------------------------------------------
+// Upcoming fixtures shown in the bottom card row (replaces the old stats).
+// ---------------------------------------------------------------------------
+
+const UPCOMING_MATCHES = [
+  {
+    id: 1,
+    matchType: "Friendly Match",
+    teamA: "Forest Riders",
+    teamB: "Hill Strikers",
+    date: "10 Aug 2026",
+    time: "09:00 AM",
+    venue: "Stream Side Arena",
+  },
+  {
+    id: 2,
+    matchType: "Weekend League",
+    teamA: "Mountain Kings",
+    teamB: "Nature Warriors",
+    date: "12 Aug 2026",
+    time: "04:30 PM",
+    venue: "Valley Ground",
+  },
+  {
+    id: 3,
+    matchType: "Morning Match",
+    teamA: "Sunrise XI",
+    teamB: "Valley Smashers",
+    date: "15 Aug 2026",
+    time: "10:00 AM",
+    venue: "Forest Cricket Park",
+  },
+  {
+    id: 4,
+    matchType: "Evening Match",
+    teamA: "Highland XI",
+    teamB: "Lakeview Kings",
+    date: "18 Aug 2026",
+    time: "05:00 PM",
+    venue: "Hillside Ground",
+  },
+  {
+    id: 5,
+    matchType: "Friendly Match",
+    teamA: "Tea Estate Titans",
+    teamB: "Pine Grove Panthers",
+    date: "20 Aug 2026",
+    time: "08:30 AM",
+    venue: "Nature Cricket Ground",
+  },
+  {
+    id: 6,
+    matchType: "Weekend Match",
+    teamA: "Summit Strikers",
+    teamB: "Cloud Warriors",
+    date: "22 Aug 2026",
+    time: "03:30 PM",
+    venue: "Yelagiri Cricket Arena",
+  },
 ];
 
 const HEADLINE_LINES = [
@@ -420,18 +467,31 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
           </motion.div>
         </div>
 
+        {/* Section Heading */}
+        <div className="mb-6 flex items-center mt-14 sm:mt-16 justify-between">
+          <div>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-5xl">
+              Upcoming Matches
+            </h2>
+
+            <p className="mt-1 max-w-lg text-sm text-slate-400">
+              Explore upcoming cricket matches and exciting events happening at
+              Stream Side, Yelagiri Hills.
+            </p>
+          </div>
+        </div>
         {/* -------------------------------------------------------------- */}
         {/* BOTTOM: floating glass statistics card                         */}
         {/* -------------------------------------------------------------- */}
-        <div className="relative mt-14 sm:mt-16">
+        <div className="relative ">
           {/* Left Fade */}
-          <div className="pointer-events-none absolute -left-4 top-0 z-20 h-full w-20 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
+          <div className="pointer-events-none absolute -left-6 top-0 z-20 h-full w-15 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
           {/* Right Fade */}
-          <div className="pointer-events-none absolute -right-4 top-0 z-20 h-full w-20 bg-gradient-to-l from-slate-950 via-slate-950/80 to-transparent" />
+          <div className="pointer-events-none absolute -right-6 top-0 z-20 h-full w-15 bg-gradient-to-l from-slate-950 via-slate-950/80 to-transparent" />
           <div className="no-scrollbar flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory">
-            {STATS.map((stat, i) => (
+            {UPCOMING_MATCHES.map((match) => (
               <div
-                key={i}
+                key={match.id}
                 className="group relative w-[270px] sm:w-[285px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-white/10 bg-black/35 backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)]"
               >
                 {/* Glow */}
@@ -444,38 +504,35 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
                 <div className="relative z-10 p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                      <stat.icon
-                        className="h-5 w-5"
-                        style={{ color: ACCENT }}
-                      />
+                  <div className="flex min-w-0 items-center justify-between gap-2">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                      <Trophy className="h-5 w-5" style={{ color: ACCENT }} />
                     </div>
 
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
-                      Stream Side
+                    <span className="min-w-0 truncate text-right text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                      {match.matchType}
                     </span>
                   </div>
 
-                  <div className="mt-8">
-                    <h3 className="text-3xl font-black text-white">
-                      <AnimatedCounter
-                        target={stat.value}
-                        suffix={stat.suffix}
-                      />
+                  <div className="mt-8 min-h-[92px]">
+                    <h3 className="break-words text-2xl leading-tight text-white">
+                      {match.teamA}
                     </h3>
 
-                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
-                      {stat.label}
+                    <p className="mt-1.5 pl-10 break-words text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
+                      VS
+                    </p>
+                    <p className="mt-1.5 break-words text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
+                      {match.teamB}
                     </p>
                   </div>
 
-                  <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-3">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
-                      Yelagiri Hills
+                  <div className="mt-8 flex min-w-0 items-center justify-between gap-2 border-t border-white/10 pt-3">
+                    <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                      {match.date} • {match.time}
                     </span>
 
-                    <div className="flex gap-1">
+                    <div className="flex shrink-0 gap-1">
                       <span className="h-2 w-2 rounded-full bg-lime-400" />
                       <span className="h-2 w-2 rounded-full bg-lime-400/60" />
                       <span className="h-2 w-2 rounded-full bg-lime-400/30" />
