@@ -108,7 +108,7 @@ export default function Navbar() {
     // },
     // { name: "Communities", href: "/communities", hasDropdown: false },
     { name: "Events", href: "/events", hasDropdown: false },
-    { name: "About Us", href: "/about-us", hasDropdown: false },
+    { name: "About Us", href: "/about", hasDropdown: false },
   ];
 
   // Determine if a nav item is active based on the current route

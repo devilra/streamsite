@@ -153,7 +153,7 @@ export default function Footer() {
         </div>
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 lg:flex lg:justify-between gap-10 lg:gap-8">
           {/* About */}
           <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
             <div className="w-16 h-16 rounded-full border border-lime-400/40 flex items-center justify-center">
@@ -190,7 +190,7 @@ export default function Footer() {
           </div>
 
           {/* Explore */}
-          <div className="flex flex-col gap-3">
+          {/* <div className="flex flex-col gap-3">
             <h3 className="text-sm font-bold tracking-widest text-lime-400 uppercase">
               Explore
             </h3>
@@ -207,7 +207,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Experiences */}
           <div className="flex flex-col gap-3">
