@@ -412,7 +412,7 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
         {/* TOP: eyebrow + heading + description + CTA                     */}
         {/* -------------------------------------------------------------- */}
         <div className="mt-15 max-w-xl sm:mt-12">
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -425,7 +425,7 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
             <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-200">
               Stream Side Cricket · Yelagiri Hills
             </span>
-          </motion.div>
+          </motion.div> */}
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -457,7 +457,7 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-8 flex flex-wrap items-center gap-3"
           >
-            <button
+            {/* <button
               type="button"
               onClick={() => setHighlightsOpen(true)}
               className="group flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-slate-950 shadow-[0_0_30px_rgba(183,255,0,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_42px_rgba(183,255,0,0.5)] active:scale-[0.98]"
@@ -465,7 +465,7 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
             >
               <PlayCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               Cricket Highlights
-            </button>
+            </button> */}
             <button
               type="button"
               onClick={() => setIsBookingOpen(true)}

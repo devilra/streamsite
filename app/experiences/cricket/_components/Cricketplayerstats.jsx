@@ -267,7 +267,7 @@ export default function CricketPlayerStats({
             </p>
           </div>
 
-          {!loading && players.length > 0 && (
+          {/* {!loading && players.length > 0 && (
             <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
@@ -286,7 +286,7 @@ export default function CricketPlayerStats({
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* carousel */}
@@ -325,7 +325,7 @@ export default function CricketPlayerStats({
                 ))}
               </div>
 
-              {cardCount > 1 && (
+              {/* {cardCount > 1 && (
                 <div className="mt-6 flex items-center justify-center gap-1.5">
                   {players.map((player, i) => (
                     <button
@@ -342,7 +342,7 @@ export default function CricketPlayerStats({
                     />
                   ))}
                 </div>
-              )}
+              )} */}
             </>
           )}
         </div>
