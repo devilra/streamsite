@@ -16,6 +16,7 @@ import {
   CalendarDays,
   CheckCircle2,
 } from "lucide-react";
+import CricketBookingModal from "./CricketBookingModal";
 
 /* ============================================================================
    CRICKET HERO — Stream Side, Yelagiri Hills
@@ -387,6 +388,7 @@ function MatchHighlightsModal({ open, onClose }) {
 
 export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
   const [highlightsOpen, setHighlightsOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   return (
     <section className="relative w-full overflow-hidden bg-slate-950 text-white">
@@ -399,9 +401,9 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
           alt="Cricket ground at Stream Side, Yelagiri Hills"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/10" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/10" /> */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" /> */}
         <div className="absolute inset-0 bg-slate-950/15" />
       </div>
 
@@ -464,6 +466,15 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
               <PlayCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               Cricket Highlights
             </button>
+            <button
+              type="button"
+              onClick={() => setIsBookingOpen(true)}
+              className="group flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-slate-950 shadow-[0_0_30px_rgba(183,255,0,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_42px_rgba(183,255,0,0.5)] active:scale-[0.98]"
+              style={{ backgroundColor: "white", cursor: "pointer" }}
+            >
+              <PlayCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              Book Now
+            </button>
           </motion.div>
         </div>
 
@@ -485,14 +496,35 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
         {/* -------------------------------------------------------------- */}
         <div className="relative ">
           {/* Left Fade */}
-          <div className="pointer-events-none absolute -left-6 top-0 z-20 h-full w-15 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
+          {/* <div
+            className="
+      pointer-events-none
+      absolute -left-6 top-0 z-20
+      h-full w-16
+      bg-gradient-to-r
+      from-black/55
+      via-black/20
+      to-transparent
+    "
+          /> */}
+
           {/* Right Fade */}
-          <div className="pointer-events-none absolute -right-6 top-0 z-20 h-full w-15 bg-gradient-to-l from-slate-950 via-slate-950/80 to-transparent" />
+          {/* <div
+            className="
+      pointer-events-none
+      absolute -right-6 top-0 z-20
+      h-full w-16
+      bg-gradient-to-l
+      from-black/55
+      via-black/20
+      to-transparent
+    "
+          /> */}
           <div className="no-scrollbar flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory">
             {UPCOMING_MATCHES.map((match) => (
               <div
                 key={match.id}
-                className="group relative w-[270px] sm:w-[285px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-white/10 bg-black/35 backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)]"
+                className="group relative w-[270px] sm:w-[350px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-white/10 bg-black backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)]"
               >
                 {/* Glow */}
                 <div
@@ -548,6 +580,11 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
       <MatchHighlightsModal
         open={highlightsOpen}
         onClose={() => setHighlightsOpen(false)}
+      />
+
+      <CricketBookingModal
+        open={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
       />
 
       <style>{`
