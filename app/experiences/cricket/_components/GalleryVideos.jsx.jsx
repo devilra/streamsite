@@ -44,7 +44,7 @@ const ACCENT = "#B7FF00";
 // ---------------------------------------------------------------------------
 
 const IMAGE_POOL = [
-  "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1624526261967-ac4638f3e275?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1624526261967-ac4638f3e275?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
@@ -625,12 +625,12 @@ export default function GalleryVideos() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-slate-950 px-4 py-10 text-white sm:px-8 lg:px-16">
+    <section className="relative w-full overflow-hidden bg-slate-950 px-4 py-10 text-white sm:px-8 lg:px-6">
       <div className="relative">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-4">
           <div>
             <span
-              className="mb-2 inline-flex items-center  gap-2 text-2xl font-semibold uppercase tracking-[0.15em]"
+              className="mb-2 inline-flex items-center pl-0 md:pl-12  gap-2 text-2xl md:text-4xl font-semibold uppercase tracking-wider"
               style={{ color: ACCENT }}
             >
               {/* <ImageIcon className="h-5 w-5" /> */}
@@ -644,7 +644,7 @@ export default function GalleryVideos() {
           <button
             type="button"
             onClick={() => setIsUploadOpen(true)}
-            className="flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+            className="flex items-center gap-2 rounded-full  border px-5 py-2.5 text-sm font-bold transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
             style={{
               borderColor: `${ACCENT}50`,
               backgroundColor: `${ACCENT}14`,
