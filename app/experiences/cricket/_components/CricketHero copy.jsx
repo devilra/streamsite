@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -19,11 +19,7 @@ import {
   Clock3,
   Users,
 } from "lucide-react";
-import {
-  getCricketBookings,
-  subscribeToCricketBookings,
-  bookingDateKeyToDate,
-} from "../_utils/cricketBookings";
+import CricketBookingModal from "./CricketBookingModal";
 import BookingCricketModal from "./BookingCricketModel";
 
 /* ============================================================================
@@ -34,35 +30,6 @@ import BookingCricketModal from "./BookingCricketModel";
    one CTA over a cinematic, gradient-darkened background photo, with a
    floating glass stats bar pinned to the bottom of the hero.
 
-   UPCOMING MATCHES — DATA SOURCE
-   -------------------------------------------------------------------------
-   This section reads real bookings saved via BookingCricketModal from
-   localStorage (see lib/cricketBookings.js), filters out past dates, sorts
-   the rest by date ascending, and maps each booking to the same card shape
-   the UI already expects — so the card design/markup below is unchanged.
-
-   IMPORTANT — WHAT SHOWS HERE (updated):
-   -------------------------------------------------------------------------
-   "Upcoming Matches" on CricketHero now ONLY shows CONFIRMED matches, i.e.
-   bookingType === "two_teams" (both teams ready, date locked in).
-
-     • bookingType "single_team" ("My Team" registrations) is intentionally
-       EXCLUDED from this row. Those are just one team registering interest
-       with no opponent yet — they belong in a separate "Team Registrations"
-       / "My Team" component elsewhere in the app, not in the public
-       Upcoming Matches strip.
-     • bookingType "open_match" is also excluded here for the same reason —
-       it isn't a confirmed match yet, it's a request for players. That has
-       its own listing surface too.
-
-   If you later want single_team or open_match to reappear here, adjust the
-   filter in getUpcomingCards() below (search "ONLY confirmed two_teams").
-
-   The list re-reads localStorage and refreshes immediately (no page
-   refresh) whenever "streamside-cricket-booking-updated" fires — i.e. right
-   after someone confirms a booking in the modal — or when the native
-   "storage" event fires (booking made in another tab).
-
    NOTE ON THE BACKGROUND IMAGE
    I don't have access to your actual Yelagiri cricket-ground asset from this
    conversation, so the background is exposed as a `backgroundImage` prop
@@ -71,11 +38,143 @@ import BookingCricketModal from "./BookingCricketModel";
    ============================================================================ */
 
 const ACCENT = "#B7FF00";
-const VENUE_NAME = "Stream Side Cricket Ground";
 
 // TODO: replace with your existing Yelagiri cricket ground image (local import or CDN URL).
 const DEFAULT_BG =
   "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=2000&q=80";
+
+// ---------------------------------------------------------------------------
+// Upcoming fixtures shown in the bottom card row (replaces the old stats).
+// ---------------------------------------------------------------------------
+
+const UPCOMING_MATCHES = [
+  {
+    id: 1,
+    matchType: "Friendly Match",
+
+    teamA: "Forest Riders",
+    teamAImage: "/All-Images/teams/forest-riders.png",
+
+    teamB: "Hill Strikers",
+    teamBImage: "/All-Images/teams/hill-strikers.png",
+
+    date: "10 Aug 2026",
+    time: "09:00 AM",
+
+    venue: "Stream Side Arena",
+
+    format: "10 Overs",
+    duration: "1 hr 30 min",
+    players: "11 vs 11",
+
+    status: "Confirmed",
+  },
+  {
+    id: 2,
+    matchType: "Weekend League",
+
+    teamA: "Mountain Kings",
+    teamAImage: "",
+
+    teamB: "Nature Warriors",
+    teamBImage: "",
+
+    date: "12 Aug 2026",
+    time: "04:30 PM",
+
+    venue: "Valley Ground",
+
+    format: "15 Overs",
+    duration: "2 hrs",
+    players: "11 vs 11",
+
+    status: "Confirmed",
+  },
+  {
+    id: 3,
+    matchType: "Morning Match",
+
+    teamA: "Sunrise XI",
+    teamAImage: "/All-Images/teams/sunrise-xi.png",
+
+    teamB: "Valley Smashers",
+    teamBImage: "",
+
+    date: "15 Aug 2026",
+    time: "10:00 AM",
+
+    venue: "Forest Cricket Park",
+
+    format: "8 Overs",
+    duration: "1 hr 15 min",
+    players: "8 vs 8",
+
+    status: "Few Slots",
+  },
+  {
+    id: 4,
+    matchType: "Evening Match",
+
+    teamA: "Highland XI",
+    teamAImage: "",
+
+    teamB: "Lakeview Kings",
+    teamBImage: "/All-Images/teams/lakeview-kings.png",
+
+    date: "18 Aug 2026",
+    time: "05:00 PM",
+
+    venue: "Hillside Ground",
+
+    format: "10 Overs",
+    duration: "1 hr 30 min",
+    players: "11 vs 11",
+
+    status: "Full",
+  },
+  {
+    id: 5,
+    matchType: "Friendly Match",
+
+    teamA: "Tea Estate Titans",
+    teamAImage: "",
+
+    teamB: "Pine Grove Panthers",
+    teamBImage: "",
+
+    date: "20 Aug 2026",
+    time: "08:30 AM",
+
+    venue: "Nature Cricket Ground",
+
+    format: "6 Overs",
+    duration: "1 hr",
+    players: "10 vs 10",
+
+    status: "Open Match",
+  },
+  {
+    id: 6,
+    matchType: "Weekend Match",
+
+    teamA: "Summit Strikers",
+    teamAImage: "/All-Images/teams/summit-strikers.png",
+
+    teamB: "Cloud Warriors",
+    teamBImage: "",
+
+    date: "22 Aug 2026",
+    time: "03:30 PM",
+
+    venue: "Yelagiri Cricket Arena",
+
+    format: "20 Overs",
+    duration: "2 hrs 45 min",
+    players: "11 vs 11",
+
+    status: "Pending",
+  },
+];
 
 const HEADLINE_LINES = [
   { text: "Play", accent: false },
@@ -85,7 +184,6 @@ const HEADLINE_LINES = [
 
 // ---------------------------------------------------------------------------
 // Sample scorecards shown inside the "Live Match Highlights" modal.
-// (Unrelated to bookings — left as-is.)
 // ---------------------------------------------------------------------------
 
 const MATCHES = [
@@ -153,72 +251,6 @@ const MATCHES = [
     date: "2 Weeks Ago",
   },
 ];
-
-/* -------------------------------------------------------------------------- */
-/*  Booking -> Upcoming Match card mapper                                     */
-/* -------------------------------------------------------------------------- */
-
-function formatBookingDateLabel(dateKey) {
-  const date = bookingDateKeyToDate(dateKey);
-  if (!date) return "—";
-  return date.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-/**
- * Maps ONE saved booking to the card shape the "Upcoming Matches" row
- * renders. Only "two_teams" (confirmed match) bookings ever reach this
- * function now — see the filter in getUpcomingCards() below — so this is
- * intentionally simple: it just reads Team A vs Team B.
- */
-function mapBookingToCard(booking) {
-  const playerCountA = booking.teamA?.playerCount;
-  const playerCountB = booking.teamB?.playerCount;
-  const players =
-    playerCountA && playerCountB ? `${playerCountA} vs ${playerCountB}` : null;
-
-  return {
-    id: booking.id,
-    bookingType: booking.bookingType,
-    identification: "Two Teams",
-    teamA: booking.teamA?.name || "Team A",
-    teamAImage: "",
-    teamB: booking.teamB?.name || "Team B",
-    teamBImage: "",
-    subLine: null,
-    dateLabel: formatBookingDateLabel(booking.date),
-    venue: VENUE_NAME,
-    format: booking.format || "10 Overs",
-    players,
-    status: "Confirmed Match",
-  };
-}
-
-/**
- * Reads all cricket bookings from localStorage, keeps ONLY confirmed
- * two_teams matches, drops anything in the past, sorts the rest by date
- * ascending (nearest first), and maps to card shape.
- *
- * "My Team" (single_team) and "Open Match" bookings are deliberately
- * excluded here — they live in their own separate component, not in the
- * public Upcoming Matches strip on the hero.
- */
-function getUpcomingCards(bookings) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  return bookings
-    .filter((b) => b.bookingType === "two_teams") // ONLY confirmed two_teams
-    .filter((b) => {
-      const d = bookingDateKeyToDate(b.date);
-      return d && d >= today;
-    })
-    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
-    .map(mapBookingToCard);
-}
 
 // ---------------------------------------------------------------------------
 // Animated count-up used inside each stat card.
@@ -442,7 +474,7 @@ function TeamAvatar({ name, image }) {
 
   if (hasImage) {
     return (
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/5">
         <img
           src={image}
           alt={safeName}
@@ -455,7 +487,7 @@ function TeamAvatar({ name, image }) {
 
   return (
     <span
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold"
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold"
       style={{ color: ACCENT }}
       aria-label={safeName}
     >
@@ -465,23 +497,20 @@ function TeamAvatar({ name, image }) {
 }
 
 // ---------------------------------------------------------------------------
-// Small status pill for match status (always "Confirmed Match" now that
-// this row only renders confirmed two_teams bookings).
+// Small status pill for match status (Confirmed / Few Slots / Full / etc.)
+// Uses only the existing lime accent + slate/white theme.
 // ---------------------------------------------------------------------------
 
 function MatchStatusPill({ status }) {
-  const isConfirmed = status === "Confirmed Match";
+  const isPositive = status === "Confirmed" || status === "Open Match";
 
   return (
     <span
-      className="inline-flex w-fit items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide sm:text-[11px]"
-      style={{ color: isConfirmed ? ACCENT : "#cbd5e1" }}
+      className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide"
+      style={{ color: isPositive ? ACCENT : "#cbd5e1" }}
     >
-      {isConfirmed && (
-        <CheckCircle2
-          className="h-2.5 w-2.5 shrink-0"
-          style={{ color: ACCENT }}
-        />
+      {isPositive && (
+        <CheckCircle2 className="h-2.5 w-2.5" style={{ color: ACCENT }} />
       )}
       {status}
     </span>
@@ -495,20 +524,6 @@ function MatchStatusPill({ status }) {
 export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
   const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [cricketBookings, setCricketBookings] = useState([]);
-
-  // Read bookings from localStorage on mount and stay in sync — no page
-  // refresh needed after a booking is confirmed in the modal.
-  useEffect(() => {
-    setCricketBookings(getCricketBookings());
-    const unsubscribe = subscribeToCricketBookings(setCricketBookings);
-    return unsubscribe;
-  }, []);
-
-  const upcomingCards = useMemo(
-    () => getUpcomingCards(cricketBookings),
-    [cricketBookings],
-  );
 
   return (
     <section className="relative w-full overflow-hidden bg-slate-950 text-white">
@@ -521,7 +536,9 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
           alt="Cricket ground at Stream Side, Yelagiri Hills"
           className="h-full w-full object-cover"
         />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/10" /> */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" /> */}
         <div className="absolute inset-0 bg-slate-950/15" />
       </div>
 
@@ -530,6 +547,21 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
         {/* TOP: eyebrow + heading + description + CTA                     */}
         {/* -------------------------------------------------------------- */}
         <div className="mt-15 max-w-xl sm:mt-12">
+          {/* <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 backdrop-blur-sm"
+          >
+            <span
+              className="h-1.5 w-1.5 animate-pulse rounded-full"
+              style={{ backgroundColor: ACCENT }}
+            />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-200">
+              Stream Side Cricket · Yelagiri Hills
+            </span>
+          </motion.div> */}
+
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -560,6 +592,15 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-8 flex flex-wrap items-center gap-3"
           >
+            {/* <button
+              type="button"
+              onClick={() => setHighlightsOpen(true)}
+              className="group flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-slate-950 shadow-[0_0_30px_rgba(183,255,0,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_42px_rgba(183,255,0,0.5)] active:scale-[0.98]"
+              style={{ backgroundColor: ACCENT }}
+            >
+              <PlayCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              Cricket Highlights
+            </button> */}
             <button
               type="button"
               onClick={() => setIsBookingOpen(true)}
@@ -579,181 +620,129 @@ export default function CricketHero({ backgroundImage = DEFAULT_BG }) {
               Upcoming Matches
             </h2>
 
-            <p className="mt-1 max-w-lg text-sm text-slate-400 sm:text-base">
+            <p className="mt-1 max-w-lg text-sm text-slate-400">
               Explore upcoming cricket matches and exciting events happening at
               Stream Side, Yelagiri Hills.
             </p>
           </div>
         </div>
         {/* -------------------------------------------------------------- */}
-        {/* BOTTOM: floating glass Upcoming Matches row — CONFIRMED         */}
-        {/* two_teams matches only (see getUpcomingCards above).           */}
+        {/* BOTTOM: floating glass statistics card                         */}
         {/* -------------------------------------------------------------- */}
         <div className="relative ">
-          {upcomingCards.length === 0 ? (
-            <div className="flex gap-5 overflow-x-hidden pb-1">
-              {[0, 1].map((i) => (
+          {/* Left Fade */}
+          {/* <div
+            className="
+      pointer-events-none
+      absolute -left-6 top-0 z-20
+      h-full w-16
+      bg-gradient-to-r
+      from-black/55
+      via-black/20
+      to-transparent
+    "
+          /> */}
+
+          {/* Right Fade */}
+          {/* <div
+            className="
+      pointer-events-none
+      absolute -right-6 top-0 z-20
+      h-full w-16
+      bg-gradient-to-l
+      from-black/55
+      via-black/20
+      to-transparent
+    "
+          /> */}
+          <div className="no-scrollbar flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory">
+            {UPCOMING_MATCHES.map((match) => (
+              <div
+                key={match.id}
+                className="group relative w-[270px] sm:w-[350px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-white/10 bg-black backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)]"
+              >
+                {/* Glow */}
                 <div
-                  key={i}
-                  className={`group relative w-[340px] sm:w-[440px] shrink-0 overflow-hidden rounded-[24px] border border-white/10 bg-black backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)] ${
-                    i === 1 ? "hidden sm:block" : ""
-                  }`}
-                >
-                  {/* Glow */}
-                  <div
-                    className="absolute -top-12 -left-12 h-28 w-28 rounded-full opacity-10 blur-3xl"
-                    style={{ backgroundColor: ACCENT }}
-                  />
+                  className="absolute -top-12 -left-12 h-28 w-28 rounded-full opacity-20 blur-3xl group-hover:opacity-40 transition-all"
+                  style={{ backgroundColor: ACCENT }}
+                />
 
-                  {/* Top Shine */}
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                {/* Top Shine */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
-                  <div className="relative z-10 p-4 sm:p-5">
-                    {/* Header: trophy icon + identification badge */}
-                    <div className="flex min-w-0 items-center justify-between gap-2">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                        <Trophy
-                          className="h-4 w-4 opacity-50"
-                          style={{ color: ACCENT }}
-                        />
-                      </div>
-
-                      <span className="min-w-0 truncate text-right text-[10px] uppercase tracking-[0.2em] text-slate-600 sm:text-xs">
-                        Two Teams
-                      </span>
+                <div className="relative z-10 p-5">
+                  <div className="flex min-w-0 items-center justify-between gap-2">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                      <Trophy className="h-5 w-5" style={{ color: ACCENT }} />
                     </div>
 
-                    {/* Center placeholder content */}
-                    <div className="flex min-h-[128px] flex-col items-center justify-center gap-1.5 py-6 text-center">
-                      <CalendarDays className="h-6 w-6 text-slate-700" />
-                      <p className="mt-1 text-base font-bold text-slate-300 sm:text-lg">
-                        Coming Soon
-                      </p>
-                      <p className="max-w-[220px] text-xs text-slate-500">
-                        No confirmed match scheduled for this slot yet.
-                      </p>
+                    <span className="min-w-0 truncate text-right text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                      {match.matchType}
+                    </span>
+                  </div>
+
+                  <div className="mt-8 min-h-[92px]">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <TeamAvatar name={match.teamA} image={match.teamAImage} />
+                      <h3 className="min-w-0 break-words text-2xl leading-tight text-white">
+                        {match.teamA}
+                      </h3>
                     </div>
 
-                    {/* Footer: date + dot indicators */}
-                    <div className="mt-3.5 flex min-w-0 items-center justify-between gap-2 border-t border-white/10 pt-3">
-                      <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.2em] text-slate-600 sm:text-xs">
-                        TBA
-                      </span>
+                    <p className="mt-1.5 pl-10 break-words text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
+                      VS
+                    </p>
 
-                      <div className="flex shrink-0 gap-1">
-                        <span className="h-2 w-2 rounded-full bg-slate-600" />
-                        <span className="h-2 w-2 rounded-full bg-slate-700" />
-                        <span className="h-2 w-2 rounded-full bg-slate-800" />
-                      </div>
+                    <div className="mt-1.5 flex min-w-0 items-center gap-2">
+                      <TeamAvatar name={match.teamB} image={match.teamBImage} />
+                      <p className="min-w-0 break-words text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
+                        {match.teamB}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Compact secondary metadata row: format · duration · players */}
+                  <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-white/10 pt-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                    <span className="inline-flex items-center gap-1">
+                      <Trophy className="h-3 w-3 text-slate-500" />
+                      {match.format}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Clock3 className="h-3 w-3 text-slate-500" />
+                      {match.duration}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Users className="h-3 w-3 text-slate-500" />
+                      {match.players}
+                    </span>
+                  </div>
+
+                  {/* Venue */}
+                  <div className="mt-2 flex min-w-0 items-center gap-1 text-[10px] text-slate-400">
+                    <MapPin className="h-3 w-3 shrink-0 text-slate-500" />
+                    <span className="min-w-0 truncate">{match.venue}</span>
+                  </div>
+
+                  {/* Status */}
+                  <div className="mt-2.5">
+                    <MatchStatusPill status={match.status} />
+                  </div>
+
+                  <div className="mt-4 flex min-w-0 items-center justify-between gap-2 border-t border-white/10 pt-3">
+                    <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                      {match.date} • {match.time}
+                    </span>
+
+                    <div className="flex shrink-0 gap-1">
+                      <span className="h-2 w-2 rounded-full bg-lime-400" />
+                      <span className="h-2 w-2 rounded-full bg-lime-400/60" />
+                      <span className="h-2 w-2 rounded-full bg-lime-400/30" />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-scrollbar flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory">
-              {upcomingCards.map((match) => (
-                <div
-                  key={match.id}
-                  className="group relative w-[340px] sm:w-[440px] shrink-0 snap-start overflow-hidden rounded-[24px] border border-white/10 bg-black backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.45)]"
-                >
-                  {/* Glow */}
-                  <div
-                    className="absolute -top-12 -left-12 h-28 w-28 rounded-full opacity-20 blur-3xl group-hover:opacity-40 transition-all"
-                    style={{ backgroundColor: ACCENT }}
-                  />
-
-                  {/* Top Shine */}
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-
-                  <div className="relative z-10 p-4 sm:p-5">
-                    {/* Header: trophy icon + identification badge */}
-                    <div className="flex min-w-0 items-center justify-between gap-2">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                        <Trophy className="h-4 w-4" style={{ color: ACCENT }} />
-                      </div>
-
-                      <span className="min-w-0 truncate text-right text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:text-xs">
-                        {match.identification}
-                      </span>
-                    </div>
-
-                    {/* Two-column body: teams (left) | separator | match info (right) */}
-                    <div className="mt-4 flex items-stretch gap-3">
-                      {/* LEFT: Team A / VS / Team B */}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex min-w-0 items-center gap-2">
-                          <TeamAvatar
-                            name={match.teamA}
-                            image={match.teamAImage}
-                          />
-                          <h3 className="min-w-0 truncate text-lg font-bold leading-tight text-white sm:text-2xl">
-                            {match.teamA}
-                          </h3>
-                        </div>
-
-                        <p className="mt-1 pl-9 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500 sm:text-xs">
-                          VS
-                        </p>
-
-                        <div className="mt-1 flex min-w-0 items-center gap-2">
-                          <TeamAvatar
-                            name={match.teamB}
-                            image={match.teamBImage}
-                          />
-                          <p className="min-w-0 truncate text-sm font-semibold text-slate-300 sm:text-base">
-                            {match.teamB}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Vertical separator */}
-                      <div className="w-px shrink-0 bg-white/10" />
-
-                      {/* RIGHT: format · players · venue · status, stacked */}
-                      <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400 sm:text-xs">
-                          <Trophy className="h-3 w-3 shrink-0 text-slate-500" />
-                          {match.format}
-                        </span>
-
-                        {match.players && (
-                          <span className="inline-flex min-w-0 items-center gap-1 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400 sm:text-xs">
-                            <Users className="h-3 w-3 shrink-0 text-slate-500" />
-                            <span className="min-w-0 truncate">
-                              {match.players}
-                            </span>
-                          </span>
-                        )}
-
-                        <span className="inline-flex min-w-0 items-center gap-1 text-[10px] text-slate-400 sm:text-xs">
-                          <MapPin className="h-3 w-3 shrink-0 text-slate-500" />
-                          <span className="min-w-0 truncate">
-                            {match.venue}
-                          </span>
-                        </span>
-
-                        <MatchStatusPill status={match.status} />
-                      </div>
-                    </div>
-
-                    {/* Footer: date + dot indicators */}
-                    <div className="mt-3.5 flex min-w-0 items-center justify-between gap-2 border-t border-white/10 pt-3">
-                      <span className="min-w-0 truncate text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:text-xs">
-                        {match.dateLabel}
-                      </span>
-
-                      <div className="flex shrink-0 gap-1">
-                        <span className="h-2 w-2 rounded-full bg-lime-400" />
-                        <span className="h-2 w-2 rounded-full bg-lime-400/60" />
-                        <span className="h-2 w-2 rounded-full bg-lime-400/30" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

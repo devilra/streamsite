@@ -218,7 +218,7 @@ function MediaCard({ item, onOpen }) {
       type="button"
       onClick={() => onOpen(item)}
       whileHover={{ y: -6 }}
-      className="group relative h-56 w-[85vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 text-left sm:h-64 sm:w-[calc(50%-10px)] lg:h-72 lg:w-[calc(33.333%-14px)]"
+      className="group relative h-56 w-[85vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 text-left sm:h-64 sm:w-[46%] lg:h-72 lg:w-[29%]"
     >
       <img
         src={item.image}
@@ -240,7 +240,6 @@ function MediaCard({ item, onOpen }) {
         ) : (
           <>
             <ImageIcon className="h-3 w-3" style={{ color: ACCENT }} />
-            Photo
           </>
         )}
       </span>
@@ -625,20 +624,24 @@ export default function GalleryVideos() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-slate-950 px-4 py-10 text-white sm:px-8 lg:px-6">
+    <section className="relative w-full overflow-hidden bg-slate-950 px-4 pt-2 pb-10 text-white sm:px-8 lg:px-6">
       <div className="relative">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-4">
+        <div className="mb-3 flex items-center justify-between gap-4">
           <div>
-            <span
-              className="mb-2 inline-flex items-center pl-0 md:pl-12  gap-2 text-2xl md:text-4xl font-semibold uppercase tracking-wider"
-              style={{ color: ACCENT }}
-            >
-              {/* <ImageIcon className="h-5 w-5" /> */}
+            <div className="mb-3 flex items-center gap-3 pl-0 md:pl-12">
+              <span className="h-px w-10" style={{ backgroundColor: ACCENT }} />
+
+              <span
+                className="text-[12px] md:text-sm font-semibold uppercase tracking-[0.2em]"
+                style={{ color: ACCENT }}
+              >
+                Shared By Our Guests
+              </span>
+            </div>
+
+            <h3 className="text-3xl pl-0 md:pl-12 mb-3 font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Gallery
-            </span>
-            {/* <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Photos &amp; Videos Worth Reliving
-            </h3> */}
+            </h3>
           </div>
 
           <button
